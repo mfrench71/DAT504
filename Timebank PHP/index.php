@@ -1,14 +1,12 @@
-<?php
-    require_once 'header.php';
+<?php require_once 'header.php'; ?>
     
-    echo "<br><span class='main'>Welcome to $appname,";
-    
-    if ($loggedin) {
-        echo " $user, you are logged in.";
-    } else {
-        echo ' please sign up and/or log in to join in.';
-    }
-?>
-</span><br><br>
+<p>Welcome to <?=$appname;?></p>
+
+<?php if ($loggedin) { ?>
+    <p>You are logged in as <?=$username?>.</p>
+<?php } else { ?>
+    <p>Please sign up and/or log in to join in.</p>
+<?php } ?>
+
 </body>
 </html>
