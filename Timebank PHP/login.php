@@ -36,15 +36,13 @@
             
             // If there is a result (match), set session variables and display logged in message
     
-            else
-    
-            {
+            else {
+                
                 $_SESSION['username'] = $username;
                 $_SESSION['password'] = $password;
                 $_SESSION['creditBalance'] = $row['creditBalance'];
                 die("You are now logged in.<br><br>");
             }
-    
         }
     }
 ?>
