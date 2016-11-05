@@ -23,12 +23,16 @@
     
     <?=$appname . $userstr . " Credit Balance: " . $creditBalanceStr;?>
 
+     <!-- If user is logged in, show logged in menu -->
+
     <?php if ($loggedin) { ?>
         
         <ul class='menu'>
             <li><a href='profile.php'>Edit Profile</a></li>
             <li><a href='logout.php'>Log out</a></li>
         </ul>
+
+    <!--  If not logged in, show logged out menu and message -->
 
     <?php } else { ?>
         
