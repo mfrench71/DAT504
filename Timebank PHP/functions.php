@@ -1,6 +1,3 @@
-<script src="javascript.js"></script>
-<link href="style.css" rel="stylesheet">
-
 <?php
 
     // Preferences
