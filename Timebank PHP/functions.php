@@ -1,8 +1,8 @@
+<script src="javascript.js"></script>
+<link href="style.css" rel="stylesheet">
+
 <?php
 
-    echo "<script src='javascript.js'></script>";
-    echo "<link href='style.css' rel='stylesheet'>";
-    
     // Preferences
     $appname = "Timebank";
 
