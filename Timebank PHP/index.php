@@ -8,5 +8,4 @@
     <p>Please sign up and/or log in to join in.</p>
 <?php } ?>
 
-</body>
-</html>
+<?php require_once 'footer.php'; ?>
