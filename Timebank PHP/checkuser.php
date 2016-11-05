@@ -17,12 +17,12 @@
 
     if ($result->num_rows) { ?>
 
-            <p>&nbsp;&#x2718; This username is taken</p>
+            <p>&#x2718; This username is taken</p>
 
     <!-- If no, the username is available -->
 
     <?php } else { ?>
 
-            <p>&nbsp;&#x2714; This username is available</p>
+            <p>&#x2714; This username is available</p>
     
     <?php } ?>
