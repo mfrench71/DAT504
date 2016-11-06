@@ -41,6 +41,7 @@
                 $_SESSION['username'] = $username;
                 $_SESSION['password'] = $password;
                 $_SESSION['creditBalance'] = $row['creditBalance'];
+                header("location: index.php");
                 die("You are now logged in.<br><br>");
             }
         }
@@ -57,3 +58,5 @@
     <input type="password" maxlength="16" name="password" value=<?=$password;?>>
     <br><span class='fieldname'>&nbsp;</span>
     <input type='submit' value='Login'></form>
+
+<?php require_once 'footer.php'; ?>

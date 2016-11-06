@@ -42,8 +42,6 @@
     
 </script>
 
-<h3>Please enter your details to sign up</h3>
-
 <?php
 
     $error = $username = $password = $firstname = $lastname = "";
@@ -53,21 +51,24 @@
         $username = cleanString($_POST['username']);
         $password = cleanString($_POST['password']);    
         $firstname = cleanString($_POST['firstname']);    
-        $lastname = cleanString($_POST['lastname']);    
+        $lastname = cleanString($_POST['lastname']);
 
         if ($username == "" || $password == "" || $firstname == "" || $lastname == "")
-            $error = "Not all fields were completed<br><br>";
+            $error = "Not all fields were completed.<br />";
         else {
             $result = queryMysql("SELECT * FROM users WHERE username='$username'");
             if ($result->num_rows)
-                $error = "That username already exists<br><br>";
+                $error = "That username already exists.<br />";
             else {
                 queryMysql("INSERT INTO users (username, password, firstname, lastname, timeBalance, creditBalance) VALUES('$username', '$password', '$firstname', '$lastname','0','1')");
-                die("<h4>Account created</h4>Please Log in.<br><br>");
+                header("location: skills.php");
+                die("<h4>Account created</h4>Please Log in.");
             }
         }
     }
 ?>
+
+<h3>Step 1: Please enter your details to sign up:</h3>
 
 <form method='post' action='signup.php'><?=$error;?>
 
@@ -87,3 +88,5 @@
     <input type='submit' value='Sign up'>
 
 </form>
+
+<?php require_once 'footer.php'; ?>
