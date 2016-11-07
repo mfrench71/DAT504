@@ -40,7 +40,6 @@
                 
                 $_SESSION['username'] = $username;
                 $_SESSION['password'] = $password;
-                $_SESSION['creditBalance'] = $row['creditBalance'];
                 header("location: index.php");
                 die("You are now logged in.<br><br>");
             }

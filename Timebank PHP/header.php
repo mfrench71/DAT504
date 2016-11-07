@@ -6,28 +6,28 @@
     // Set default values
 
     $userstr = ' (Guest)';
-    $creditBalanceStr = " (0)";
     
     // If user is logged in, set username and credit balance from session
 
     if (isset($_SESSION['username'])) {
         $username = $_SESSION['username'];
-        $creditBalance = $_SESSION['creditBalance'];
         $loggedin = TRUE;
         $userstr = " ($username)";
-        $creditBalanceStr = " ($creditBalance)";
     
     }
         else $loggedin = FALSE;
+
     ?>
     
-    <?=$appname . $userstr . " Credit Balance: " . $creditBalanceStr;?>
+    <?=$appname . $userstr;?>
 
      <!-- If user is logged in, show logged in menu -->
 
     <?php if ($loggedin) { ?>
         
         <ul class='menu'>
+            <li><a href='index.php'>Home</a></li>
+            <li><a href='browse.php'>Browse</a></li>
             <li><a href='profile.php'>Edit Profile</a></li>
             <li><a href='logout.php'>Log out</a></li>
         </ul>
