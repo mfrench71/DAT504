@@ -18,30 +18,30 @@ $skills = queryMysql("SELECT * FROM skills ORDER BY skillname");
 // If yes, retrieve each checkbox value
 
 if (isset($_POST['Submit'])) {
-    echo 'You have added the following skills to your profile:';
+    echo 'You have requested the following skills:';
 
     // Insert user ID and skill ID checkbox value(s) into DB
     
     $checkboxes = isset($_POST['checked']) ? $_POST['checked'] : array();
 	foreach ($checkboxes as $value) {
 		echo " $value, ";
-        queryMysql("INSERT INTO userskills (user_id, skill_id, skillOffered) VALUES ($user_id, $value, '1')");
+        queryMysql("INSERT INTO userskills (user_id, skill_id, skillRequested) VALUES ($user_id, $value, '1')");
 	}
     
-    header("location: skills1.php");
+    header("location: index.php");
 }
 
 ?>
 
 <!-- Display the form -->
 
-<h3>Step 2: Please tell us what skills you can offer:</h3>
+<h3>Step 3: Please tell us what help you need:</h3>
 
-<form method='post' action='skills.php'>    
+<form method='post' action='skills1.php'>    
     <table style="border: 1px solid silver;">
     <tr>
         <th>Skill Name</th>
-        <th>I can OFFER this skill</th>
+        <th>I need help with</th>
     </tr>
         
     <?php while ($row = $skills->fetch_assoc()) { ?>    
@@ -55,7 +55,7 @@ if (isset($_POST['Submit'])) {
     <?php } ?>
     
     </table>
-        <input name="Submit" type="submit" id="Submit" value="Step 3 &gt;&gt;">
+        <input name="Submit" type="submit" id="Submit" value="Submit">
 </form>
 
 <?php require_once 'footer.php'; ?>

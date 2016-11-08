@@ -60,7 +60,7 @@
             if ($result->num_rows)
                 $error = "That username already exists.<br />";
             else {
-                queryMysql("INSERT INTO users (username, password, firstname, lastname, timeBalance, creditBalance) VALUES('$username', '$password', '$firstname', '$lastname','0','1')");
+                queryMysql("INSERT INTO users (username, password, firstname, lastname, timeBalance) VALUES('$username', '$password', '$firstname', '$lastname','1')");
                 $_SESSION['username'] = $username;
                 header("location: skills.php");
                 die("<h4>Account created</h4>Please Log in.");

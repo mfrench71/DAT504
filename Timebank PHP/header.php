@@ -19,24 +19,23 @@
 
     ?>
     
-    <?=$appname . $userstr;?>
+    <?=$appname?>
 
      <!-- If user is logged in, show logged in menu -->
 
     <?php if ($loggedin) { ?>
         
-        <ul class='menu'>
+        <ul id ="headerMenu">
             <li><a href='index.php'>Home</a></li>
-            <li><a href='browse.php'>Browse</a></li>
-            <li><a href='profile.php'>Edit Profile</a></li>
             <li><a href='logout.php'>Log out</a></li>
+            <li><a href="profile.php"><?=$userstr;?></a></li>
         </ul>
 
     <!--  If not logged in, show logged out menu and message -->
 
     <?php } else { ?>
         
-        <ul class='menu'>
+        <ul id = "headerMenu">
             <li><a href='index.php'>Home</a></li>
             <li><a href='signup.php'>Sign up</a></li>
             <li><a href='login.php'>Log in</a></li>

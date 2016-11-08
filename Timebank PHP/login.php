@@ -22,7 +22,7 @@
         // If all form fields completed, query database for user details
         
         else {
-            $result = queryMySQL("SELECT username, password, creditBalance FROM users WHERE username='$username' AND password='$password'");
+            $result = queryMySQL("SELECT username, password, timeBalance FROM users WHERE username='$username' AND password='$password'");
             
             // Fetch the results
             
