@@ -11,6 +11,11 @@
     $user_id = $row['id'];
     $timeBalance = $row['timeBalance'];
     
+    // Set up Time Balance variables
+    
+    $creditTimeBalance = $timeBalance + 1;
+    $debitTimeBalance = $timeBalance - 1;
+    
     // Get user's skill details from DB
     
     // User skills offered
@@ -19,7 +24,7 @@
     
     // User skills requested
     
-    $skillsRequested = queryMysql("SELECT skills.id, skills.skillname FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE userskills.user_id = '$user_id' AND userskills.skillRequested = 1");
+    $skillsRequested = queryMysql("SELECT skills.id, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE userskills.user_id = '$user_id' AND userskills.skillRequested = 1");
     
     // Community skills requested - all - don't show user's own requests
     
@@ -29,30 +34,52 @@
     
     $skillsRequestedMatched = queryMysql("SELECT users.*, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 1 AND timeOffered = 0 AND userskills.skill_id IN (SELECT skill_id FROM userskills WHERE user_id = '$user_id' AND skillOffered = 1)");
     
+    // Display skill offers that match logged in user's skill requests
+    
+    $skillsOfferedMatched = queryMysql("SELECT users.id AS user_id, username, firstname, lastname, skills.id, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillOffered = 1 AND timeOffered = 0 AND userskills.skill_id IN (SELECT skill_id FROM userskills WHERE user_id = '$user_id' AND skillRequested = 1)");
+    
     // Get IDs of users making offers
-    $timeOfferedByUserID = queryMysql("SELECT id FROM users WHERE id IN (SELECT timeOfferedByUserId FROM userskills WHERE user_id = '$user_id' AND timeOffered = 1 AND timeAccepted = 0)");
-    $timeOfferedByUserIDRow = $timeOfferedByUserID->fetch_assoc();
-    $offerUserId = $timeOfferedByUserIDRow['id'];
+    //$timeOfferedByUser = queryMysql("SELECT * FROM users WHERE id IN (SELECT timeOfferedByUserId FROM userskills WHERE user_id = '$user_id' AND timeOffered = 1 AND timeAccepted = 0)");
     
-    // Query User table with ID of users making offers
-    
-    // Has form been submitted?
-    // If yes, update userskills table with offer details
+    // Has offer form been submitted?
+    // If yes, update userskills table
 
-    if (isset($_POST['Submit'])) {
-        $user_skills_id = $_POST['user_skills_id'];
-        $request_user_id = $_POST['request_user_id'];
-        queryMysql("UPDATE userskills SET timeOffered = 1, timeOfferedByUserId = '$user_id' WHERE id = '$user_skills_id' AND user_id = '$request_user_id'");
+    if (isset($_POST['SubmitOffer'])) {
+        $offer_user_skills_id = $_POST['offer_user_skills_id'];
+        $offer_request_user_id = $_POST['offer_request_user_id'];
+        queryMysql("UPDATE userskills SET skillRequested = 0, timeOffered = 1, timeOfferedByUserId = '$user_id' WHERE id = '$offer_user_skills_id' AND user_id = '$offer_request_user_id'");
+        
+        // Add one credit to logged in user
+        queryMysql("UPDATE users SET timeBalance = '$creditTimeBalance' WHERE id = '$user_id'");
+        
         header("location: index.php");
     }
+    
+    // Has the accept form been submitted?
+    // If yes, update the userskills table
+    
+    if (isset($_POST['AcceptOffer'])) {
+        $accept_request_skill_id = $_POST['accept_request_skill_id'];
+        $accept_request_user_id = $_POST['accept_request_user_id'];
+        
+        // Logged in user no longer needs the skill they accepted so set this to 0
+        queryMysql("UPDATE userskills SET skillRequested = 0, timeAccepted = 1, timeAcceptedByUserId = '$accept_request_user_id' WHERE user_id = '$user_id' AND skillRequested = 1 AND skill_id = '$accept_request_skill_id'");
+        
+        // Subtract one credit from logged in user
+        queryMysql("UPDATE users SET timeBalance = '$debitTimeBalance' WHERE id = '$user_id'");
+        
+        // Add one credit user whose offer was accepted
+        queryMysql("UPDATE users SET timeBalance = '$creditTimeBalance' WHERE id = '$accept_request_user_id'");
+    }
+    
 ?>
 
 <table width="100%" cellspacing="20">
     <tr>
         <td width="33%" valign="top">
             <h3>Your Profile Summary</h3>
-            <p>You are logged in as <?=$username?>.</p>
-            <p>Your Time Balance is: <?=$timeBalance?></p>
+            <p>You are logged in as <?=$username." (".$user_id.")"?></p>
+            <p>Your Time Balance (Credit) is: <?=$timeBalance?></p>
             <h3>These are your skills:</h3>
 
             <ul>
@@ -61,12 +88,13 @@
                 <?php } ?>
             </ul>
 
-            <h3>This the help you need:</h3>
+            <h3>This is the help you need:</h3>
 
             <ul>
                 <?php while ($skillsRequestedRow = $skillsRequested->fetch_assoc()) { ?>
                 <li><?=$skillsRequestedRow['skillname']." (".$skillsRequestedRow['id'].")";?></li>
-                <?php } ?>
+                <li>Id from userskills table is: <?=$skillsRequestedRow['userskills_id']?></li>
+                <?php } ?> 
             </ul>
         </td>
         <td width="33%" valign="top">
@@ -78,15 +106,28 @@
             Would like help with: <strong><?=$skillsRequestedMatchedRow['skillname']." (".$skillsRequestedMatchedRow['userskills_id'].")";?></strong>
             </p>
             <form action="index.php" method="post" name="form1" id="form1">
-              <input type="submit" name="Submit" id="submit" value="Offer 1 Hour">
-              <input type="hidden" name="request_user_id" value=<?=$skillsRequestedMatchedRow['id']?>>
-              <input type="hidden" name="user_skills_id" value=<?=$skillsRequestedMatchedRow['userskills_id']?>>
+              <input type="submit" name="SubmitOffer" id="submit" value="Offer 1 Hour">
+              <input type="hidden" name="offer_request_user_id" value=<?=$skillsRequestedMatchedRow['id']?>>
+              <input type="hidden" name="offer_user_skills_id" value=<?=$skillsRequestedMatchedRow['userskills_id']?>>
             </form>
             <hr />
         <?php } ?>
         </td>
         <td width="33%" valign="top"><h3>Community Skills Offered:</h3>
-        <p>You have received offers of help from the following community members:</p></td>
+            <p>These members have the skills to help you<br >Use your credit to buy the skills you need!</p>
+            <?php while ($skillsOfferedMatchedRow = $skillsOfferedMatched->fetch_assoc()) { ?>
+                <p>Username: <?=$skillsOfferedMatchedRow['username']." (".$skillsOfferedMatchedRow['user_id'].")";?><br/>
+                Name: <?=$skillsOfferedMatchedRow['firstname']." ".$skillsOfferedMatchedRow['lastname'];?><br/>
+                Can offer: <strong><?=$skillsOfferedMatchedRow['skillname']." (".$skillsOfferedMatchedRow['userskills_id'].")";?></strong>
+                </p>
+                <form action="index.php" method="post" name="form1" id="form1">
+                    <input type="submit" name="AcceptOffer" id="submit" value="Accept Offer">
+                    <input type="hidden" name="accept_request_skill_id" value=<?=$skillsOfferedMatchedRow['id']?>>
+                    <input type="hidden" name="accept_request_user_id" value=<?=$skillsOfferedMatchedRow['user_id']?>>
+                </form>
+                <hr />
+                <?php } ?>
+        </td>
     </tr>
 </table>
 
