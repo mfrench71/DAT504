@@ -7,7 +7,7 @@
 
     $userstr = ' (Guest)';
     
-    // If user is logged in, set username and credit balance from session
+    // If user is logged in, set username session
 
     if (isset($_SESSION['username'])) {
         $username = $_SESSION['username'];
@@ -19,7 +19,7 @@
 
     ?>
     
-    <?=$appname?>
+    <!-- <?=$appname?> -->
 
      <!-- If user is logged in, show logged in menu -->
 
@@ -37,10 +37,8 @@
         
         <ul id = "headerMenu">
             <li><a href='index.php'>Home</a></li>
-            <li><a href='signup.php'>Sign up</a></li>
-            <li><a href='login.php'>Log in</a></li>
+            <li><a href='signup.php'>Sign Up</a></li>
+            <li><a href='login.php'>Log In</a></li>
         </ul>
 
-        <!-- <span class='info'>&#8658; You must be logged in to view this page.</span> -->
-    
     <?php } ?>

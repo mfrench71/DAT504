@@ -70,6 +70,8 @@
         
         // Add one credit user whose offer was accepted
         queryMysql("UPDATE users SET timeBalance = '$creditTimeBalance' WHERE id = '$accept_request_user_id'");
+        
+        header("location: index.php");
     }
     
 ?>
@@ -106,7 +108,7 @@
             Would like help with: <strong><?=$skillsRequestedMatchedRow['skillname']." (".$skillsRequestedMatchedRow['userskills_id'].")";?></strong>
             </p>
             <form action="index.php" method="post" name="form1" id="form1">
-              <input type="submit" name="SubmitOffer" id="submit" value="Offer 1 Hour">
+              <input type="submit" class="modern" name="SubmitOffer" id="submit" value="Offer 1 Hour">
               <input type="hidden" name="offer_request_user_id" value=<?=$skillsRequestedMatchedRow['id']?>>
               <input type="hidden" name="offer_user_skills_id" value=<?=$skillsRequestedMatchedRow['userskills_id']?>>
             </form>
@@ -121,7 +123,7 @@
                 Can offer: <strong><?=$skillsOfferedMatchedRow['skillname']." (".$skillsOfferedMatchedRow['userskills_id'].")";?></strong>
                 </p>
                 <form action="index.php" method="post" name="form1" id="form1">
-                    <input type="submit" name="AcceptOffer" id="submit" value="Accept Offer">
+                    <input type="submit" class="modern" name="AcceptOffer" id="submit" value="Accept Offer">
                     <input type="hidden" name="accept_request_skill_id" value=<?=$skillsOfferedMatchedRow['id']?>>
                     <input type="hidden" name="accept_request_user_id" value=<?=$skillsOfferedMatchedRow['user_id']?>>
                 </form>

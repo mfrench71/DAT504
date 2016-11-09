@@ -17,7 +17,7 @@
         // If form fields incomplete, display error message
 
         if ($username == "" || $password == "")
-            $error = "<p>Not all fields were completed.</p>";
+            $error = "<p class='error'>Not all fields were completed.</p>";
         
         // If all form fields completed, query database for user details
         
@@ -31,7 +31,7 @@
             // If no results (no match), display error message
 
             if ($result->num_rows == 0) {
-                $error = "<p>Username/Password invalid</p>";
+                $error = "<p class='error'>Username/Password invalid</p>";
             }
             
             // If there is a result (match), set session variables and display logged in message
@@ -49,13 +49,12 @@
 
 <!-- Display Login Form -->
 
-<form method="post" action="login.php"><?=$error;?>
-<span class="fieldname">Username</span>
-    <input type="text" maxlength="255" name="username" value=<?=$username;?>>
-<br>
-<span class="fieldname">Password</span>
-    <input type="password" maxlength="16" name="password" value=<?=$password;?>>
-    <br><span class='fieldname'>&nbsp;</span>
-    <input type='submit' value='Login'></form>
+<form method="post" action="login.php">
+<?=$error;?>
+<label for="username">Username</label>
+    <input type="text" class="simple-input" maxlength="255" name="username" value=<?=$username;?>>
+<label for="password">Password</label>
+    <input type="password" class="simple-input" maxlength="16" name="password" value=<?=$password;?>>
+<input type="submit" class="modern" value="Login"></form>
 
 <?php require_once 'footer.php'; ?>

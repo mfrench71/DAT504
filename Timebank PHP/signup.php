@@ -2,6 +2,8 @@
 
 <script>
     
+    // Username available AJAX
+    
     // If username field empty, clear info DIV
     function checkUser(username) {
         if (username.value == '') {
@@ -11,7 +13,7 @@
     
         params = "username=" + username.value
         request = new ajaxRequest()
-        request.open("POST", "checkuser.php", true)
+        request.open("POST", "checkUser.php", true)
         request.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
         request.setRequestHeader("Content-length", params.length)
         request.setRequestHeader("Connection", "close")
@@ -24,6 +26,33 @@
         }
         request.send(params)
     }
+    
+    // Check password strength AJAX
+    
+    // If password field empty, clear info DIV
+    function checkPassword(password) {
+        if (password.value == '') {
+            O('passwordInfo').innerHTML = ''
+            return
+        }
+    
+        params = "password=" + password.value
+        request = new ajaxRequest()
+        request.open("POST", "checkPassword.php", true)
+        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+        request.setRequestHeader("Content-length", params.length)
+        request.setRequestHeader("Connection", "close")
+    
+        request.onreadystatechange = function() {
+            if (this.readyState == 4)
+                if (this.status == 200)
+                    if (this.responseText != null)
+                        O('passwordInfo').innerHTML = this.responseText
+        }
+        request.send(params)
+    }
+    
+    // AJAX request
     
     function ajaxRequest() {
         try { var request = new XMLHttpRequest() }
@@ -54,11 +83,11 @@
         $lastname = cleanString($_POST['lastname']);
 
         if ($username == "" || $password == "" || $firstname == "" || $lastname == "")
-            $error = "Not all fields were completed.<br />";
+            $error = "<p class='error'>Not all fields were completed.</p>";
         else {
             $result = queryMysql("SELECT * FROM users WHERE username='$username'");
             if ($result->num_rows)
-                $error = "That username already exists.<br />";
+                $error = "<p class='error'>That username already exists.</p>";
             else {
                 queryMysql("INSERT INTO users (username, password, firstname, lastname, timeBalance) VALUES('$username', '$password', '$firstname', '$lastname','1')");
                 $_SESSION['username'] = $username;
@@ -71,22 +100,24 @@
 
 <h3>Step 1: Please enter your details to sign up:</h3>
 
-<form method='post' action='signup.php'><?=$error;?>
+<form method='post' action='signup.php'>
+<?=$error;?>
 
-    <span class='fieldname'>Username</span>
-    <input type='text' maxlength='255' name='username' onBlur="checkUser(this)" value=<?=$username;?>><span id='info'></span><br>
+    <label for="username">Username</label>
+    <input type="text" class="simple-input" maxlength="255" name="username" onBlur="checkUser(this)" value=<?=$username;?>>
+    <span id='info'></span>
 
-    <span class='fieldname'>Password</span>
-    <input type='text' maxlength='16' name='password' value=<?=$password;?>><br>
+    <label for="password">Password</label>
+    <input type="text" class="simple-input" maxlength="16" name="password" onBlur="checkPassword(this)" value=<?=$password;?>>
+    <div id="passwordInfo"></div>
 
-    <span class='fieldname'>First Name</span>
-    <input type='text' maxlength='255' name='firstname' value=<?=$firstname;?>><br>
+    <label for="firstname">First Name</label>
+    <input type="text" class="simple-input" maxlength="255" name="firstname" value=<?=$firstname;?>>
 
-    <span class='fieldname'>Last Name</span>
-    <input type='text' maxlength='255' name='lastname' value=<?=$lastname;?>><br>
+    <label for="lastname">Last Name</label>
+    <input type="text" class="simple-input" maxlength="255" name="lastname" value=<?=$lastname;?>>
 
-    <span class='fieldname'>&nbsp;</span>
-    <input type='submit' value='Sign up'>
+    <input type="submit" class="modern" value="Sign Up">
 
 </form>
 
