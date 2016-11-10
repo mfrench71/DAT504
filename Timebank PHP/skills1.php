@@ -54,7 +54,7 @@ if (isset($_POST['Submit'])) {
     <?php } ?>
     
     </table>
-        <input name="Submit" class="modern" type="submit" id="Submit" value="Submit">
+        <input name="Submit" class="modern" type="submit" id="Submit" value="Finish">
 </form>
 
 <?php require_once 'footer.php'; ?>

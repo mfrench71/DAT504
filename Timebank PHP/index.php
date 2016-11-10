@@ -24,11 +24,6 @@
     $user_id = $row['id'];
     $timeBalance = $row['timeBalance'];
     
-    // Set up Time Balance variables
-    
-    $creditTimeBalance = $timeBalance + 1;
-    $debitTimeBalance = $timeBalance - 1;
-    
     // Get user's skill details from DB
     
     // User skills offered
@@ -51,16 +46,29 @@
     
     $skillsOfferedMatched = queryMysql("SELECT users.id AS user_id, username, firstname, lastname, skills.id, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillOffered = 1 AND timeOffered = 0 AND userskills.skill_id IN (SELECT skill_id FROM userskills WHERE user_id = '$user_id' AND skillRequested = 1)");
     
+    // Direct offers from other users
+    
+    $directOffer = queryMysql("SELECT users.id AS user_id, username, firstname, lastname, skills.id AS skills_id, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.timeOfferedByUserId LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 1 AND timeOffered = 1 AND userskills.timeOfferedByUserId IN (SELECT skill_id FROM userskills WHERE user_id = '$user_id' AND skillRequested = 1)");
+    
     // Has offer form been submitted?
     // If yes, update userskills table
 
     if (isset($_POST['SubmitOffer'])) {
         $offer_user_skills_id = $_POST['offer_user_skills_id'];
         $offer_request_user_id = $_POST['offer_request_user_id'];
+        
+        // The user being offered time no longer needs skill requested so set this to 0
+        
         queryMysql("UPDATE userskills SET skillRequested = 0, timeOffered = 1, timeOfferedByUserId = '$user_id' WHERE id = '$offer_user_skills_id' AND user_id = '$offer_request_user_id'");
         
         // Add one credit to logged in user
-        queryMysql("UPDATE users SET timeBalance = '$creditTimeBalance' WHERE id = '$user_id'");
+        queryMysql("UPDATE users SET timeBalance = timeBalance + 1 WHERE id = '$user_id'");
+        
+        // Subtract one credit from user who was offered skill
+        
+        queryMysql("UPDATE users SET timeBalance = timeBalance -1 WHERE id = '$offer_request_user_id'");
+        
+        // Refresh page
         
         header("location: index.php?updateStatus=success&action=Offer");;
     }
@@ -74,13 +82,15 @@
         $accept_request_user_id = $_POST['accept_request_user_id'];
         
         // Logged in user no longer needs the skill they accepted so set this to 0
-        queryMysql("UPDATE userskills SET skillRequested = 0, timeAccepted = 1, timeAcceptedByUserId = '$accept_request_user_id' WHERE user_id = '$user_id' AND skillRequested = 1 AND skill_id = '$accept_request_skill_id'");
+        queryMysql("UPDATE userskills SET skillRequested = 0 WHERE user_id = '$user_id' AND skill_id = '$accept_request_skill_id'");
         
         // Subtract one credit from logged in user
-        queryMysql("UPDATE users SET timeBalance = '$debitTimeBalance' WHERE id = '$user_id'");
+        queryMysql("UPDATE users SET timeBalance = timeBalance -1 WHERE id = '$user_id'");
         
         // Add one credit user whose offer was accepted
-        queryMysql("UPDATE users SET timeBalance = '$creditTimeBalance' WHERE id = '$accept_request_user_id'");
+        queryMysql("UPDATE users SET timeBalance = timeBalance + 1 WHERE id = '$accept_request_user_id'");
+        
+        // Refresh page
         
         header("location: index.php?updateStatus=success&action=Accept");
     }
@@ -93,6 +103,18 @@
             <h3>Your Profile Summary</h3>
             <p>You are logged in as <?=$username." (".$user_id.")"?></p>
             <p>Your Time Balance (Credit) is: <?=$timeBalance?></p>
+            
+            <?php
+        
+                // Time credit notifications
+        
+                if($timeBalance > 0 && $timeBalance <= 2) {
+                    echo "<div class = 'my-notify-warning'>Your time credit is low! Why not offer some time?</div>";
+                } elseif ($timeBalance == 0) {
+                    echo "<div class = 'my-notify-error'>You have no time credit!.</div>";
+                }
+            ?>
+            
             <h3>These are your skills:</h3>
 
             <ul>
@@ -121,6 +143,17 @@
                 echo "<div class = 'my-notify-info'>You currently have no skills requested.</div>";
             
              } ?>
+            
+            <p>You've received direct offers of help from:</p>
+            
+            <?php while ($directOfferRow = $directOffer->fetch_assoc()) { ?>
+                
+                <p>Username: <?=$directOfferRow['username']." (".$directOfferRow['user_id'].")";?><br/>
+                    Name: <?=$directOfferRow['firstname']." ".$directOfferRow['lastname'];?><br/>
+                    Offered help with: <strong><?=$directOfferRow['skillname']." (".$directOfferRow['userskills_id'].")";?></strong>
+                    </p>
+            
+            <?php } ?>
             
         </td>
         <td width="33%" valign="top">
@@ -167,12 +200,25 @@
                     Name: <?=$skillsOfferedMatchedRow['firstname']." ".$skillsOfferedMatchedRow['lastname'];?><br/>
                     Can offer: <strong><?=$skillsOfferedMatchedRow['skillname']." (".$skillsOfferedMatchedRow['userskills_id'].")";?></strong>
                     </p>
+            
+                    <?php if($timeBalance > 0) { ?>
+                    <!-- If user has credit, show Accept Offer button -->
+                        
                     <form action="index.php" method="post" name="form1" id="form1">
                         <input type="submit" class="modern" name="AcceptOffer" id="submit" value="Accept Offer">
                         <input type="hidden" name="accept_request_skill_id" value=<?=$skillsOfferedMatchedRow['id']?>>
                         <input type="hidden" name="accept_request_user_id" value=<?=$skillsOfferedMatchedRow['user_id']?>>
                     </form>
+                    
                     <hr />
+            
+                    <?php } else { ?>
+                        <!-- Otherwise show warning -->
+                        <div class ="my-notify-warning">
+                            Earn credits to accept offers!
+                        </div>            
+                    <?php } ?>
+            
                 <?php } ?>
             
             <!-- Otherwise, display info message -->

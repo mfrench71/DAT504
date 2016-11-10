@@ -1,6 +1,12 @@
 /* Stylesheet */
 
 @import url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
+
+body {
+    font-family: "proxima-nova", "Proxima Nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
 .my-notify-info, .my-notify-success, .my-notify-warning, .my-notify-error {
     padding:10px;
     margin:10px 0;
@@ -49,10 +55,6 @@
 .my-notify-error {
     color: #D8000C;
     background-color: #FFBABA;
-}
-
-body {
-    font-family: "proxima-nova", "Proxima Nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 #headerMenu {

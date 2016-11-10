@@ -1,5 +1,5 @@
         <div id = "footer">
-            <p>Timebank</p>
+            <p><?=$appname?></p>
         </div>
     </body>
 </html>
