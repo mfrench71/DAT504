@@ -66,7 +66,7 @@ if (isset($_POST['password'])) {
 $rating = password_strength($password);
 
 ?>
-<p>Your password rating is: <?php echo $rating; ?></p>
+<div class="my-notify-info">Your password rating is: <?php echo $rating; ?></div>
 <div id ="meter">
     <?php
        for ($i = 0; $i < 10; $i++) {

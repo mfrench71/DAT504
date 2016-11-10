@@ -1,5 +1,56 @@
 /* Stylesheet */
 
+@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
+.my-notify-info, .my-notify-success, .my-notify-warning, .my-notify-error {
+    padding:10px;
+    margin:10px 0;
+}
+.my-notify-info:before, .my-notify-success:before, .my-notify-warning:before, .my-notify-error:before {
+    font-family:FontAwesome;
+    font-style:normal;
+    font-weight:400;
+    speak:none;
+    display:inline-block;
+    text-decoration:inherit;
+    width:1em;
+    margin-right:.2em;
+    text-align:center;
+    font-variant:normal;
+    text-transform:none;
+    line-height:1em;
+    margin-left:.2em;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale
+}
+.my-notify-info:before {
+    content:"\f05a";
+}
+.my-notify-success:before {
+    content:'\f00c';
+}
+.my-notify-warning:before {
+    content:'\f071';
+}
+.my-notify-error:before {
+    content:'\f057';
+}
+.my-notify-info {
+    color: #00529B;
+    background-color: #BDE5F8;
+}
+.my-notify-success {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+}
+.my-notify-warning {
+    color: #9F6000;
+    background-color: #FEEFB3;
+}
+.my-notify-error {
+    color: #D8000C;
+    background-color: #FFBABA;
+}
+
 body {
     font-family: "proxima-nova", "Proxima Nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -10,6 +61,9 @@ body {
     padding: 0;
     overflow: hidden;
     background-color: #009933;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
 #headerMenu li {
@@ -22,6 +76,18 @@ body {
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
+}
+
+#footer {
+    margin: 0;
+    padding: 0;
+    background-color: #009933;
+    border-radius: 3px;
+}
+
+#footer p {
+    color: white;
+    padding: 14px 16px;
 }
 
 /* Change the link color to #111 (black) on hover */
@@ -67,10 +133,6 @@ body {
 }
 
 .modern:hover  { background: #33ff77; }
-
-.error {
-    color: red;
-}
 
 #meter div {
     height: 20px;

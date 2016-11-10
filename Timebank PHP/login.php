@@ -1,7 +1,5 @@
 <?php require_once 'header.php'; ?>
 
-<h3>Please enter your details to log in</h3>
-
 <?php
 
     $error = $username = $password = "";
@@ -17,7 +15,7 @@
         // If form fields incomplete, display error message
 
         if ($username == "" || $password == "")
-            $error = "<p class='error'>Not all fields were completed.</p>";
+            $error = "<div class='my-notify-warning'>Not all fields were completed.</div>";
         
         // If all form fields completed, query database for user details
         
@@ -31,7 +29,7 @@
             // If no results (no match), display error message
 
             if ($result->num_rows == 0) {
-                $error = "<p class='error'>Username/Password invalid</p>";
+                $error = "<div class='my-notify-error'>Username/Password invalid</div>";
             }
             
             // If there is a result (match), set session variables and display logged in message
@@ -40,12 +38,13 @@
                 
                 $_SESSION['username'] = $username;
                 $_SESSION['password'] = $password;
-                header("location: index.php");
-                die("You are now logged in.<br><br>");
+                header("location: index.php?updateStatus=success&action=Login");
             }
         }
     }
 ?>
+
+<h3>Please enter your details to log in</h3>
 
 <!-- Display Login Form -->
 
@@ -57,7 +56,7 @@
 			<label for="username">Username</label>
 		</td>
     	<td>
-        	<input name="username" type="text" class="simple-input" value="<?=$username;?>" size="40" maxlength="255">
+        	<input name="username" type="text" class="simple-input" value="<?=$username;?>" size="35" maxlength="255">
        	</td>
 	</tr>
 	<tr>
@@ -65,7 +64,7 @@
 			<label for="password">Password</label>
 		</td>
    		<td>
-   			<input name="password" type="password" class="simple-input" value="<?=$password;?>" size="40" maxlength="16">
+   			<input name="password" type="password" class="simple-input" value="<?=$password;?>" size="35" maxlength="16">
    		</td>
   	<tr>
   		<td> 

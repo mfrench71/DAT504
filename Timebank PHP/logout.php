@@ -5,7 +5,7 @@
     if (isset($_SESSION['username'])) {
         
         destroySession(); 
-        header("location: index.php"); ?>
+        header("location: index.php?updateStatus=success&action=Logout"); ?>
 
         <p>You have been logged out. Please <a href='index.php'>click here</a> to return to the home page.</p>
   

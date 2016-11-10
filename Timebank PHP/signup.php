@@ -1,5 +1,4 @@
 <?php require_once 'header.php'; ?>
-
 <script>
     
     // Username available AJAX
@@ -70,7 +69,6 @@
     }
     
 </script>
-
 <?php
 
     $error = $username = $password = $firstname = $lastname = "";
@@ -83,11 +81,11 @@
         $lastname = cleanString($_POST['lastname']);
 
         if ($username == "" || $password == "" || $firstname == "" || $lastname == "")
-            $error = "<p class='error'>Not all fields were completed.</p>";
+            $error = "<div class='my-notify-warning'>Not all fields were completed.</div>";
         else {
             $result = queryMysql("SELECT * FROM users WHERE username='$username'");
             if ($result->num_rows)
-                $error = "<p class='error'>That username already exists.</p>";
+                $error = "<div class='my-notify-warning'>That username already exists.</div>";
             else {
                 queryMysql("INSERT INTO users (username, password, firstname, lastname, timeBalance) VALUES('$username', '$password', '$firstname', '$lastname','1')");
                 $_SESSION['username'] = $username;
@@ -98,27 +96,39 @@
     }
 ?>
 
+<!-- Display sign up form -->
+
 <h3>Step 1: Please enter your details to sign up:</h3>
-
 <form method='post' action='signup.php'>
-<?=$error;?>
+  <?=$error;?>
+  <table>
+    <tr>
+      <td><label for="username">Username</label></td>
+      <td><input type="text" class="simple-input" maxlength="255" name="username" size="35" onBlur="checkUser(this)" value=<?=$username;?>></td>
+      <td><span id='info'></span></td>
+    </tr>
+    <tr>
+      <td><label for="password">Password</label></td>
+      <td><input type="text" class="simple-input" maxlength="16" name="password" size="35" onBlur="checkPassword(this)" value=<?=$password;?>></td>
+      <td><div id="passwordInfo"></div></td>
+    </tr>
+    <tr>
+      <td><label for="firstname">First Name</label></td>
+      <td><input type="text" class="simple-input" maxlength="255" name="firstname" size="35" value=<?=$firstname;?>></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><label for="lastname">Last Name</label></td>
+      <td><input type="text" class="simple-input" maxlength="255" name="lastname" size="35" value=<?=$lastname;?>></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><input type="submit" class="modern" value="Step 2 >>"></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table
 
-    <label for="username">Username</label>
-    <input type="text" class="simple-input" maxlength="255" name="username" onBlur="checkUser(this)" value=<?=$username;?>>
-    <span id='info'></span>
-
-    <label for="password">Password</label>
-    <input type="text" class="simple-input" maxlength="16" name="password" onBlur="checkPassword(this)" value=<?=$password;?>>
-    <div id="passwordInfo"></div>
-
-    <label for="firstname">First Name</label>
-    <input type="text" class="simple-input" maxlength="255" name="firstname" value=<?=$firstname;?>>
-
-    <label for="lastname">Last Name</label>
-    <input type="text" class="simple-input" maxlength="255" name="lastname" value=<?=$lastname;?>>
-
-    <input type="submit" class="modern" value="Sign Up">
 
 </form>
-
 <?php require_once 'footer.php'; ?>
