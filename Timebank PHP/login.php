@@ -51,10 +51,30 @@
 
 <form method="post" action="login.php">
 <?=$error;?>
-<label for="username">Username</label>
-    <input type="text" class="simple-input" maxlength="255" name="username" value=<?=$username;?>>
-<label for="password">Password</label>
-    <input type="password" class="simple-input" maxlength="16" name="password" value=<?=$password;?>>
-<input type="submit" class="modern" value="Login"></form>
+<table>
+	<tr>
+    	<td>
+			<label for="username">Username</label>
+		</td>
+    	<td>
+        	<input name="username" type="text" class="simple-input" value="<?=$username;?>" size="40" maxlength="255">
+       	</td>
+	</tr>
+	<tr>
+		<td>
+			<label for="password">Password</label>
+		</td>
+   		<td>
+   			<input name="password" type="password" class="simple-input" value="<?=$password;?>" size="40" maxlength="16">
+   		</td>
+  	<tr>
+  		<td> 
+			<input type="submit" class="modern" value="Login">
+		</td>
+		<td>
+		</td>
+	</tr>
+</table>
+</form>
 
 <?php require_once 'footer.php'; ?>
