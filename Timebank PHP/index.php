@@ -1,11 +1,11 @@
 <?php require_once 'header.php'; ?>
 <?php $updateStatus = ""; ?>
     
-<p>Welcome to <?=$appname;?></p>
+<h1>Welcome to <?=$appname;?></h1>
 
 <?php
 
-// Success message display
+// Success status message display
     
     if (isset($_GET['updateStatus'])) {
         $style = $_GET['updateStatus'];
@@ -24,31 +24,23 @@
     $user_id = $row['id'];
     $timeBalance = $row['timeBalance'];
     
-    // Get user's skill details from DB
+    // Get user's skill details from DB:
     
-    // User skills offered
+    // Logged in user: skills offered
     
     $skillsOffered = queryMysql("SELECT skills.id, skills.skillname FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE userskills.user_id = '$user_id' AND userskills.skillOffered = 1");
     
-    // User skills requested
+    // Logged in user: skills requested
     
     $skillsRequested = queryMysql("SELECT skills.id, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE userskills.user_id = '$user_id' AND userskills.skillRequested = 1");
-    
-    // Community skills requested - all - don't show user's own requests
-    
-    // $communitySkillsRequested = queryMysql("SELECT users.id,users.username, users.firstname, users.lastname, `skills`.`skillname`, userskills.id FROM `users` LEFT JOIN `userskills` ON `users`.`id` = `userskills`.`user_id` LEFT JOIN `skills` ON `userskills`.`skill_id` = `skills`.`id` WHERE userskills.skillRequested = 1 AND userskills.user_id != '$user_id'");
     
     // Display skill requests that match logged in user's skill offers
     
     $skillsRequestedMatched = queryMysql("SELECT users.*, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 1 AND timeOffered = 0 AND userskills.skill_id IN (SELECT skill_id FROM userskills WHERE user_id = '$user_id' AND skillOffered = 1)");
     
-    // Display skill offers that match logged in user's skill requests
-    
-    $skillsOfferedMatched = queryMysql("SELECT users.id AS user_id, username, firstname, lastname, skills.id, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillOffered = 1 AND timeOffered = 0 AND userskills.skill_id IN (SELECT skill_id FROM userskills WHERE user_id = '$user_id' AND skillRequested = 1)");
-    
     // Direct offers from other users
     
-    $directOffer = queryMysql("SELECT users.id AS user_id, username, firstname, lastname, skills.id AS skills_id, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.timeOfferedByUserId LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 1 AND timeOffered = 1 AND userskills.timeOfferedByUserId IN (SELECT skill_id FROM userskills WHERE user_id = '$user_id' AND skillRequested = 1)");
+    $directOffer = queryMysql("SELECT users.id AS user_id, username, firstname, lastname, skills.id AS skills_id, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.timeOfferedByUserId LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 1 AND timeOffered = 1 AND userskills.timeOfferedByUserId IN (SELECT skill_id FROM userskills WHERE user_id = '$user_id' AND timeOffered = 1)");
     
     // Has offer form been submitted?
     // If yes, update userskills table
@@ -57,38 +49,27 @@
         $offer_user_skills_id = $_POST['offer_user_skills_id'];
         $offer_request_user_id = $_POST['offer_request_user_id'];
         
-        // The user being offered time no longer needs skill requested so set this to 0
-        
-        queryMysql("UPDATE userskills SET skillRequested = 0, timeOffered = 1, timeOfferedByUserId = '$user_id' WHERE id = '$offer_user_skills_id' AND user_id = '$offer_request_user_id'");
-        
-        // Add one credit to logged in user
-        queryMysql("UPDATE users SET timeBalance = timeBalance + 1 WHERE id = '$user_id'");
-        
-        // Subtract one credit from user who was offered skill
-        
-        queryMysql("UPDATE users SET timeBalance = timeBalance -1 WHERE id = '$offer_request_user_id'");
-        
-        // Refresh page
+        queryMysql("UPDATE userskills SET timeOffered = 1, timeOfferedByUserId = '$user_id' WHERE id = '$offer_user_skills_id' AND user_id = '$offer_request_user_id'");
         
         header("location: index.php?updateStatus=success&action=Offer");;
     }
     
-    // Has the accept form been submitted?
+    // Has the accept direct offer form been submitted?
     // If yes, update the userskills table
     
-    if (isset($_POST['AcceptOffer'])) {
+    if (isset($_POST['AcceptDirectOffer'])) {
         
-        $accept_request_skill_id = $_POST['accept_request_skill_id'];
-        $accept_request_user_id = $_POST['accept_request_user_id'];
+        $accept_direct_offer_user_id = $_POST['accept_direct_offer_user_id'];
+        $accept_direct_offer_userskills_id = $_POST['accept_direct_offer_userskills_id'];
         
         // Logged in user no longer needs the skill they accepted so set this to 0
-        queryMysql("UPDATE userskills SET skillRequested = 0 WHERE user_id = '$user_id' AND skill_id = '$accept_request_skill_id'");
+        queryMysql("UPDATE userskills SET skillRequested = 0, timeAccepted = 1, timeAcceptedByUserId = '$user_id' WHERE id = '$accept_direct_offer_userskills_id'");
         
         // Subtract one credit from logged in user
         queryMysql("UPDATE users SET timeBalance = timeBalance -1 WHERE id = '$user_id'");
         
-        // Add one credit user whose offer was accepted
-        queryMysql("UPDATE users SET timeBalance = timeBalance + 1 WHERE id = '$accept_request_user_id'");
+        // Add one credit to user whose offer was accepted
+        queryMysql("UPDATE users SET timeBalance = timeBalance + 1 WHERE id = '$accept_direct_offer_user_id'");
         
         // Refresh page
         
@@ -97,10 +78,13 @@
     
 ?>
 
-<table width="100%" cellspacing="20">
-    <tr>
-        <td width="33%" valign="top">
-            <h3>Your Profile Summary</h3>
+<!-- Content Layout -->
+
+<div class="container">
+    
+    <div class="column">
+        
+        <h3>Your Profile Summary</h3>
             <p>You are logged in as <?=$username." (".$user_id.")"?></p>
             <p>Your Time Balance (Credit) is: <?=$timeBalance?></p>
             
@@ -116,12 +100,24 @@
             ?>
             
             <h3>These are your skills:</h3>
+            
+            <!-- If user has skills to offer, display them -->
+            
+             <?php if(mysqli_num_rows($skillsOffered) > 0) { ?>
 
-            <ul>
-                <?php while ($skillsOfferedRow = $skillsOffered->fetch_assoc()) { ?>
-                <li><?=$skillsOfferedRow['skillname']." (".$skillsOfferedRow['id'].")";?></li>
-                <?php } ?>
-            </ul>
+                <ul>
+                    <?php while ($skillsOfferedRow = $skillsOffered->fetch_assoc()) { ?>
+                    <li><?=$skillsOfferedRow['skillname']." (".$skillsOfferedRow['id'].")";?></li>
+                    <?php } ?>
+                </ul>
+            
+            <!-- Otherwise, display info message -->
+            
+            <?php } else {
+            
+                echo "<div class = 'my-notify-info'>You currently have no skills to offer.</div>";
+            
+             } ?>
 
             <h3>This is the help you need:</h3>
             
@@ -144,22 +140,19 @@
             
              } ?>
             
-            <p>You've received direct offers of help from:</p>
+            <form action="profile.php" method="post" id="EditProfileForm">
+                <input type="submit" class="modernProfile" name="EditProfile" value="Edit Profile">
+            </form>
+       
+    </div>
+    
+    <div class="column">
+        
+        <!-- Community Skills Needed -->
+        
+        <h3>Community Skills Needed:</h3>
             
-            <?php while ($directOfferRow = $directOffer->fetch_assoc()) { ?>
-                
-                <p>Username: <?=$directOfferRow['username']." (".$directOfferRow['user_id'].")";?><br/>
-                    Name: <?=$directOfferRow['firstname']." ".$directOfferRow['lastname'];?><br/>
-                    Offered help with: <strong><?=$directOfferRow['skillname']." (".$directOfferRow['userskills_id'].")";?></strong>
-                    </p>
-            
-            <?php } ?>
-            
-        </td>
-        <td width="33%" valign="top">
-            <h3>Community Skills Needed:</h3>
-            
-            <!-- If user has skills needed by other users, display those users -->
+            <!-- If user has skills needed by other users, display those users and skills required -->
             
             <?php if(mysqli_num_rows($skillsRequestedMatched) > 0) { ?>
             
@@ -169,6 +162,9 @@
                     Name: <?=$skillsRequestedMatchedRow['firstname']." ".$skillsRequestedMatchedRow['lastname'];?><br/>
                     Would like help with: <strong><?=$skillsRequestedMatchedRow['skillname']." (".$skillsRequestedMatchedRow['userskills_id'].")";?></strong>
                     </p>
+            
+                    <!-- Submit Offer Form -->
+            
                     <form action="index.php" method="post" name="form1" id="form1">
                       <input type="submit" class="modern" name="SubmitOffer" id="submit" value="Offer 1 Hour">
                       <input type="hidden" name="offer_request_user_id" value=<?=$skillsRequestedMatchedRow['id']?>>
@@ -184,60 +180,69 @@
                 echo "<div class = 'my-notify-info'>There are currently no members who need your skills.</div>";
             
              } ?>
+        
+    </div>
+    
+    <div class="column">
+        
+        <!-- Community Skills Offered -->
+        
+        <h3>Community Skills Offered:</h3>
             
+           <!-- If user has direct offers of help from other users, display them -->
             
-        </td>
-        <td width="33%" valign="top">
-            <h3>Community Skills Offered:</h3>
+            <?php if(mysqli_num_rows($directOffer) > 0) { ?>
             
-            <!-- If other users have skills needed by logged in user, display those users -->
-            
-            <?php if(mysqli_num_rows($skillsOfferedMatched) > 0) { ?>
-            
-                <p>These members have the skills to help you<br >Use your credit to buy the skills you need!</p>
-                <?php while ($skillsOfferedMatchedRow = $skillsOfferedMatched->fetch_assoc()) { ?>
-                    <p>Username: <?=$skillsOfferedMatchedRow['username']." (".$skillsOfferedMatchedRow['user_id'].")";?><br/>
-                    Name: <?=$skillsOfferedMatchedRow['firstname']." ".$skillsOfferedMatchedRow['lastname'];?><br/>
-                    Can offer: <strong><?=$skillsOfferedMatchedRow['skillname']." (".$skillsOfferedMatchedRow['userskills_id'].")";?></strong>
+                <p>You've received direct offers of help:</p>
+
+                <?php while ($directOfferRow = $directOffer->fetch_assoc()) { ?>
+
+                    <p>Username: <?=$directOfferRow['username']." (".$directOfferRow['user_id'].")";?><br/>
+                        Name: <?=$directOfferRow['firstname']." ".$directOfferRow['lastname'];?><br/>
+                        Offered help with: <strong><?=$directOfferRow['skillname']." (".$directOfferRow['userskills_id'].")";?></strong>
                     </p>
-            
+
                     <?php if($timeBalance > 0) { ?>
-                    <!-- If user has credit, show Accept Offer button -->
-                        
-                    <form action="index.php" method="post" name="form1" id="form1">
-                        <input type="submit" class="modern" name="AcceptOffer" id="submit" value="Accept Offer">
-                        <input type="hidden" name="accept_request_skill_id" value=<?=$skillsOfferedMatchedRow['id']?>>
-                        <input type="hidden" name="accept_request_user_id" value=<?=$skillsOfferedMatchedRow['user_id']?>>
-                    </form>
-                    
-                    <hr />
             
-                    <?php } else { ?>
-                        <!-- Otherwise show warning -->
-                        <div class ="my-notify-warning">
-                            Earn credits to accept offers!
-                        </div>            
-                    <?php } ?>
-            
+                        <!-- If user has credit, show Accept Offer button -->
+
+                        <form action="index.php" method="post" name="form1" id="form1">
+                            <input type="submit" class="modern" name="AcceptDirectOffer" id="submit" value="Accept Offer">
+                            <input type="hidden" name="accept_direct_offer_user_id" value=<?=$directOfferRow['user_id']?>>
+                            <input type="hidden" name="accept_direct_offer_userskills_id" value=<?=$directOfferRow['userskills_id']?>>
+                        </form>
+
+                        <hr />
+
+                        <?php } else { ?>
+                            <!-- Otherwise show warning -->
+                            <div class ="my-notify-warning">
+                                Earn credits to accept offers!
+                            </div>            
+                        <?php } ?>
+
                 <?php } ?>
             
-            <!-- Otherwise, display info message -->
+                <!-- Otherwise, display info message -->
             
             <?php } else {
             
-                echo "<div class = 'my-notify-info'>There are currently no members who offer the skills you need.</div>";
+                echo "<div class = 'my-notify-info'>You have not received any offers of help yet.</div>";
             
              } ?>
-        </td>
-    </tr>
-</table>
+        
+    </div>
+
+</div>
+
+<br style="clear:both;"/>
 
 <!-- If user is not logged in, display info message -->
 
-<?php } else {
+<?php } else { ?>
 
-    echo "<div class = 'my-notify-info'>Please sign up or log in to join our community.</div>";
+    <div class = "my-notify-info">Please <a href="signup.php">sign up</a> or <a href="login.php">log in</a> to join our community.</div>
 
-} ?>
+<?php } ?>
 
 <?php require_once 'footer.php'; ?>

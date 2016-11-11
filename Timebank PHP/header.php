@@ -27,6 +27,7 @@
         
         <ul id ="headerMenu">
             <li><a href='index.php'>Home</a></li>
+            <li><a href='about.php'>About</a></li>
             <li><a href='logout.php'>Log Out</a></li>
             <li><a href="profile.php"><?=$userstr;?></a></li>
         </ul>
@@ -37,6 +38,7 @@
         
         <ul id = "headerMenu">
             <li><a href='index.php'>Home</a></li>
+            <li><a href='about.php'>About</a></li>
             <li><a href='signup.php'>Sign Up</a></li>
             <li><a href='login.php'>Log In</a></li>
         </ul>

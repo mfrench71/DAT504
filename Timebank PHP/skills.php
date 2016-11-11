@@ -35,6 +35,7 @@ if (isset($_POST['Submit'])) {
 <!-- Display the form -->
 
 <h3>Step 2: Please tell us what skills you can offer:</h3>
+<p class="my-notify-info">You'll be able to let us know what skills you NEED on the following page.</p>
 <form method="post" action="skills.php">
   <table cellpadding="5" style="border: 1px solid silver;">
     <tr>
