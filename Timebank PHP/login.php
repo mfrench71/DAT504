@@ -44,6 +44,8 @@
     }
 ?>
 
+<h1>Log In</h1>
+
 <h3>Please enter your details to log in</h3>
 
 <!-- Display Login Form -->

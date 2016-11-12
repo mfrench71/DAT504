@@ -1,4 +1,5 @@
 <?php require_once 'header.php'; ?>
+
 <?php $updateStatus = ""; ?>
     
 <h1>Welcome to <?=$appname;?></h1>
@@ -40,7 +41,7 @@
     
     // Direct offers from other users
     
-    $directOffer = queryMysql("SELECT users.id AS user_id, username, firstname, lastname, skills.id AS skills_id, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.timeOfferedByUserId LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 1 AND timeOffered = 1 AND userskills.timeOfferedByUserId IN (SELECT skill_id FROM userskills WHERE user_id = '$user_id' AND timeOffered = 1)");
+    $directOffer = queryMysql("SELECT users.id AS user_id, username, firstname, lastname, skills.id AS skills_id, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.timeOfferedByUserId LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 1 AND timeOffered = 1 AND userskills.timeOfferedByUserId IN (SELECT timeOfferedByUserId FROM userskills WHERE user_id = '$user_id' AND timeOffered = 1)");
     
     // Has offer form been submitted?
     // If yes, update userskills table
@@ -54,7 +55,7 @@
         header("location: index.php?updateStatus=success&action=Offer");;
     }
     
-    // Has the accept direct offer form been submitted?
+    // Has the ACCEPT direct offer form been submitted?
     // If yes, update the userskills table
     
     if (isset($_POST['AcceptDirectOffer'])) {
@@ -74,6 +75,22 @@
         // Refresh page
         
         header("location: index.php?updateStatus=success&action=Accept");
+    }
+    
+    // Has the REJECT direct offer form been submitted?
+    // If yes, update the userskills table
+    
+    if (isset($_POST['RejectDirectOffer'])) {
+        
+        $reject_direct_offer_user_id = $_POST['reject_direct_offer_user_id'];
+        $reject_direct_offer_userskills_id = $_POST['reject_direct_offer_userskills_id'];
+        
+        // Reset offer values
+        queryMysql("UPDATE userskills SET timeOffered = 0, timeOfferedByUserId = 0 WHERE id = '$reject_direct_offer_userskills_id'");
+        
+        // Refresh page
+        
+        header("location: index.php?updateStatus=success&action=Reject");
     }
     
 ?>
@@ -105,7 +122,7 @@
             
              <?php if(mysqli_num_rows($skillsOffered) > 0) { ?>
 
-                <ul>
+                <ul id="userSkills">
                     <?php while ($skillsOfferedRow = $skillsOffered->fetch_assoc()) { ?>
                     <li><?=$skillsOfferedRow['skillname']." (".$skillsOfferedRow['id'].")";?></li>
                     <?php } ?>
@@ -139,10 +156,6 @@
                 echo "<div class = 'my-notify-info'>You currently have no skills requested.</div>";
             
              } ?>
-            
-            <form action="profile.php" method="post" id="EditProfileForm">
-                <input type="submit" class="modernProfile" name="EditProfile" value="Edit Profile">
-            </form>
        
     </div>
     
@@ -158,6 +171,8 @@
             
                 <p>These members need your skills!<br />Earn Credits by offering your time to these community members:</p>
                 <?php while ($skillsRequestedMatchedRow = $skillsRequestedMatched->fetch_assoc()) { ?>
+                    
+                    <div class = "panel">
                     <p>Username: <?=$skillsRequestedMatchedRow['username']." (".$skillsRequestedMatchedRow['id'].")";?><br/>
                     Name: <?=$skillsRequestedMatchedRow['firstname']." ".$skillsRequestedMatchedRow['lastname'];?><br/>
                     Would like help with: <strong><?=$skillsRequestedMatchedRow['skillname']." (".$skillsRequestedMatchedRow['userskills_id'].")";?></strong>
@@ -170,7 +185,9 @@
                       <input type="hidden" name="offer_request_user_id" value=<?=$skillsRequestedMatchedRow['id']?>>
                       <input type="hidden" name="offer_user_skills_id" value=<?=$skillsRequestedMatchedRow['userskills_id']?>>
                     </form>
-                    <hr />
+                    
+                    </div>
+                        
                 <?php } ?>
             
             <!-- Otherwise, display info message -->
@@ -193,9 +210,11 @@
             
             <?php if(mysqli_num_rows($directOffer) > 0) { ?>
             
-                <p>You've received direct offers of help:</p>
+                <p>You've received these direct offers of help from members of the Timebank community:</p>
 
                 <?php while ($directOfferRow = $directOffer->fetch_assoc()) { ?>
+        
+                    <div class = "panel1">
 
                     <p>Username: <?=$directOfferRow['username']." (".$directOfferRow['user_id'].")";?><br/>
                         Name: <?=$directOfferRow['firstname']." ".$directOfferRow['lastname'];?><br/>
@@ -205,14 +224,16 @@
                     <?php if($timeBalance > 0) { ?>
             
                         <!-- If user has credit, show Accept Offer button -->
+        
+                        <div id = "buttonLeft">
 
                         <form action="index.php" method="post" name="form1" id="form1">
                             <input type="submit" class="modern" name="AcceptDirectOffer" id="submit" value="Accept Offer">
                             <input type="hidden" name="accept_direct_offer_user_id" value=<?=$directOfferRow['user_id']?>>
                             <input type="hidden" name="accept_direct_offer_userskills_id" value=<?=$directOfferRow['userskills_id']?>>
                         </form>
-
-                        <hr />
+                            
+                        </div>
 
                         <?php } else { ?>
                             <!-- Otherwise show warning -->
@@ -220,16 +241,30 @@
                                 Earn credits to accept offers!
                             </div>            
                         <?php } ?>
+        
+                        <!-- Reject Offer button -->
+        
+                        <div id = "buttonRight">
+        
+                        <form action="index.php" method="post" name="form1" id="form1">
+                            <input type="submit" class="modernYellow" name="RejectDirectOffer" id="submit" value="No Thanks">
+                            <input type="hidden" name="reject_direct_offer_user_id" value=<?=$directOfferRow['user_id']?>>
+                            <input type="hidden" name="reject_direct_offer_userskills_id" value=<?=$directOfferRow['userskills_id']?>>
+                        </form>
+                        
+                        </div>
+                        
+                    </div>
 
                 <?php } ?>
             
                 <!-- Otherwise, display info message -->
             
-            <?php } else {
+                <?php } else {
             
-                echo "<div class = 'my-notify-info'>You have not received any offers of help yet.</div>";
+                    echo "<div class = 'my-notify-info'>You have not received any offers of help yet.</div>";
             
-             } ?>
+                } ?>
         
     </div>
 

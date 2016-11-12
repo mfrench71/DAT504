@@ -1,74 +1,5 @@
 <?php require_once 'header.php'; ?>
-<script>
-    
-    // Username available AJAX
-    
-    // If username field empty, clear info DIV
-    function checkUser(username) {
-        if (username.value == '') {
-            O('info').innerHTML = ''
-            return
-        }
-    
-        params = "username=" + username.value
-        request = new ajaxRequest()
-        request.open("POST", "checkUser.php", true)
-        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-        request.setRequestHeader("Content-length", params.length)
-        request.setRequestHeader("Connection", "close")
-    
-        request.onreadystatechange = function() {
-            if (this.readyState == 4)
-                if (this.status == 200)
-                    if (this.responseText != null)
-                        O('info').innerHTML = this.responseText
-        }
-        request.send(params)
-    }
-    
-    // Check password strength AJAX
-    
-    // If password field empty, clear info DIV
-    function checkPassword(password) {
-        if (password.value == '') {
-            O('passwordInfo').innerHTML = ''
-            return
-        }
-    
-        params = "password=" + password.value
-        request = new ajaxRequest()
-        request.open("POST", "checkPassword.php", true)
-        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-        request.setRequestHeader("Content-length", params.length)
-        request.setRequestHeader("Connection", "close")
-    
-        request.onreadystatechange = function() {
-            if (this.readyState == 4)
-                if (this.status == 200)
-                    if (this.responseText != null)
-                        O('passwordInfo').innerHTML = this.responseText
-        }
-        request.send(params)
-    }
-    
-    // AJAX request
-    
-    function ajaxRequest() {
-        try { var request = new XMLHttpRequest() }
-        catch(e1) {
-            try { request = new ActiveXObject("Msxml2.XMLHTTP") }
-            catch(e2) {
-                try { request = new ActiveXObject("Microsoft.XMLHTTP") }
-                catch(e3) {
-                    request = false
-                } 
-            } 
-        }
-                
-        return request
-    }
-    
-</script>
+
 <?php
 
     $error = $username = $password = $firstname = $lastname = "";
@@ -98,6 +29,7 @@
 
 <!-- Display sign up form -->
 
+<h1>Sign Up</h1>
 <h3>Step 1: Please enter your details to sign up:</h3>
 <form method='post' action='signup.php'>
   <?=$error;?>
