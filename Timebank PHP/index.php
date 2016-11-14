@@ -1,10 +1,6 @@
-<?php require_once 'header.php'; ?>
+<?php require_once 'header.php';
 
-<?php $updateStatus = ""; ?>
-    
-<h1>Welcome to <?=$appname;?></h1>
-
-<?php
+$updateStatus = "";
 
 // Success status message display
     
@@ -37,7 +33,11 @@
     
     // Display skill requests that match logged in user's skill offers
     
-    $skillsRequestedMatched = queryMysql("SELECT users.*, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 1 AND timeOffered = 0 AND userskills.skill_id IN (SELECT skill_id FROM userskills WHERE user_id = '$user_id' AND skillOffered = 1)");
+    //$skillsRequestedMatched = queryMysql("SELECT users.*, skills.skillname, userskills.id AS userskills_id, userskills.timeOffered FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 1 AND timeOffered = 0 AND userskills.skill_id IN (SELECT skill_id FROM userskills WHERE user_id = '$user_id' AND skillOffered = 1)");
+    
+    // Changed to add 'Pending offer' functionality
+    
+    $skillsRequestedMatched = queryMysql("SELECT users.*, skills.skillname, userskills.id AS userskills_id, userskills.timeOffered FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 1 AND userskills.skill_id IN (SELECT skill_id FROM userskills WHERE user_id = '$user_id' AND skillOffered = 1)");
     
     // Direct offers from other users
     
@@ -99,11 +99,16 @@
 
 <div class="container">
     
+    <h1><span class="fa fa-home fa-fw"></span> Welcome to <?=$appname;?></h1>
+    
     <div class="column">
         
+        <div class = "panel0">
+        
         <h3>Your Profile Summary</h3>
-            <p>You are logged in as <?=$username." (".$user_id.")"?></p>
-            <p>Your Time Balance (Credit) is: <?=$timeBalance?></p>
+            <p><span class="fa fa-user-circle fa-fw"></span> You are logged in as <?=$username?></p> 
+        
+            <p><span class="fa fa-money fa-fw"></span> Your Time Balance (Credit) is: <?=$timeBalance?></p>
             
             <?php
         
@@ -124,7 +129,7 @@
 
                 <ul id="userSkills">
                     <?php while ($skillsOfferedRow = $skillsOffered->fetch_assoc()) { ?>
-                    <li><?=$skillsOfferedRow['skillname']." (".$skillsOfferedRow['id'].")";?></li>
+                    <li><?=$skillsOfferedRow['skillname']?></li>
                     <?php } ?>
                 </ul>
             
@@ -144,8 +149,7 @@
 
             <ul>
                 <?php while ($skillsRequestedRow = $skillsRequested->fetch_assoc()) { ?>
-                    <li><?=$skillsRequestedRow['skillname']." (".$skillsRequestedRow['id'].")";?></li>
-                    <!-- <li>Id from userskills table is: <?=$skillsRequestedRow['userskills_id']?></li> -->
+                    <li><?=$skillsRequestedRow['skillname']?></li>
                 <?php } ?> 
             </ul>
 
@@ -156,6 +160,8 @@
                 echo "<div class = 'my-notify-info'>You currently have no skills requested.</div>";
             
              } ?>
+            
+            </div>
        
     </div>
     
@@ -163,7 +169,7 @@
         
         <!-- Community Skills Needed -->
         
-        <h3>Community Skills Needed:</h3>
+        <h3>Community Skills Requested:</h3>
             
             <!-- If user has skills needed by other users, display those users and skills required -->
             
@@ -173,10 +179,18 @@
                 <?php while ($skillsRequestedMatchedRow = $skillsRequestedMatched->fetch_assoc()) { ?>
                     
                     <div class = "panel">
-                    <p>Username: <?=$skillsRequestedMatchedRow['username']." (".$skillsRequestedMatchedRow['id'].")";?><br/>
+                    <p><span class="fa fa-user-circle fa-fw"></span> <?=$skillsRequestedMatchedRow['username']?><br/>
                     Name: <?=$skillsRequestedMatchedRow['firstname']." ".$skillsRequestedMatchedRow['lastname'];?><br/>
-                    Would like help with: <strong><?=$skillsRequestedMatchedRow['skillname']." (".$skillsRequestedMatchedRow['userskills_id'].")";?></strong>
+                    Would like help with: <strong><?=$skillsRequestedMatchedRow['skillname']?></strong>
                     </p>
+                        
+                    <!-- If user has pending offers, display them with a notificatoin and hide the Offer button -->
+                        
+                    <?php if ($skillsRequestedMatchedRow['timeOffered']) { ?>
+                        
+                        <p class="my-notify-success"><?=$skillsRequestedMatchedRow['firstname']?> has received an offer of help with <?=$skillsRequestedMatchedRow['skillname']?> but has yet to accept it.</p>
+                        
+                    <?php } else { ?>
             
                     <!-- Submit Offer Form -->
             
@@ -185,7 +199,9 @@
                       <input type="hidden" name="offer_request_user_id" value=<?=$skillsRequestedMatchedRow['id']?>>
                       <input type="hidden" name="offer_user_skills_id" value=<?=$skillsRequestedMatchedRow['userskills_id']?>>
                     </form>
-                    
+                        
+                    <?php } ?>
+                     
                     </div>
                         
                 <?php } ?>
@@ -216,9 +232,9 @@
         
                     <div class = "panel1">
 
-                    <p>Username: <?=$directOfferRow['username']." (".$directOfferRow['user_id'].")";?><br/>
+                    <p><span class="fa fa-user-circle-o fa-fw"></span> <?=$directOfferRow['username']?><br/>
                         Name: <?=$directOfferRow['firstname']." ".$directOfferRow['lastname'];?><br/>
-                        Offered help with: <strong><?=$directOfferRow['skillname']." (".$directOfferRow['userskills_id'].")";?></strong>
+                        Offered help with: <strong><?=$directOfferRow['skillname'];?></strong>
                     </p>
 
                     <?php if($timeBalance > 0) { ?>

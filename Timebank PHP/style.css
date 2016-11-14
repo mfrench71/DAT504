@@ -1,6 +1,6 @@
 /* Stylesheet */
 
-@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
+@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
 
 html, body {
     margin-left:auto;
@@ -24,7 +24,7 @@ html, body {
 }
 
 .columnBrowse {
-    width:49%;
+    width:48%;
     float:left;
     padding: 0 6px;
 }
@@ -43,6 +43,15 @@ html, body {
     margin-bottom: 8px;
 }
 
+.panel0 {
+    background: #eeeeee;
+    border: 1px solid silver;
+    border-radius: 3px;
+    padding: 1px 8px;
+    margin-bottom: 8px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
 #buttonLeft, buttonRight {
     display: inline-block;
     float:left;
@@ -51,6 +60,7 @@ html, body {
 .my-notify-info, .my-notify-success, .my-notify-warning, .my-notify-error {
     padding:10px;
     margin:10px 0;
+    border-radius: 4px;
 }
 .my-notify-info:before, .my-notify-success:before, .my-notify-warning:before, .my-notify-error:before {
     font-family:FontAwesome;
@@ -84,18 +94,22 @@ html, body {
 .my-notify-info {
     color: #00529B;
     background-color: #BDE5F8;
+    border: 1px solid #00529B;
 }
 .my-notify-success {
     color: #4F8A10;
     background-color: #DFF2BF;
+    border: 1px solid #4F8A10;
 }
 .my-notify-warning {
     color: #9F6000;
     background-color: #FEEFB3;
+    border: 1px solid #9F6000;
 }
 .my-notify-error {
     color: #D8000C;
     background-color: #FFBABA;
+    border: 1px solid #D8000C;
 }
 
 #headerMenu {
@@ -160,7 +174,8 @@ html, body {
 
 .modern {
   display: inline-block;
-  margin: 8px 0;
+  margin-bottom: 8px;
+  margin-top: 8px;
   padding: 6px 12px;
   background: #00cc44;
   border: 1px solid rgba(0,0,0,0.15);
@@ -185,6 +200,7 @@ html, body {
 .modernYellow {
   display: inline-block;
   margin-bottom: 8px;
+  margin-top: 8px;
   margin-left: 4px;
   padding: 6px 12px;
   background: #ffcc00;

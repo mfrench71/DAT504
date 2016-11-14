@@ -25,16 +25,19 @@ function countSymbols($string) {
 }
 
 function password_strength($password) {
+    // Set initial strength value
     $strength = 0;
+    // Strongest password achieves this number of points
     $possiblePoints = 12;
+    // Length of password
     $length = strlen($password);
     
-    // One point if password contains and upper case character
+    // Add one point if password contains an upper case character
     if(detect_upper_case ($password)) {
         $strength +=1;
     }
     
-    // One point if password contains a lower case character
+    // Add one point if password contains a lower case character
     if(detect_lower_case ($password)) {
         $strength +=1;
     }
@@ -47,7 +50,7 @@ function password_strength($password) {
     
     if ($length >= 8) {
         // Add two points for a password of length of 8 characters or more
-        $strength += 3;
+        $strength += 2;
         // Add half a point for each character over 8 characters with a maximum of four points
         $strength += min(($length - 8) * 0.5, 4);
     }

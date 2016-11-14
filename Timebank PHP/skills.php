@@ -34,21 +34,28 @@ if (isset($_POST['Submit'])) {
 
 <!-- Display the form -->
 
-<h3>Step 2: Please tell us what skills you can offer:</h3>
-<p class="my-notify-info">You'll be able to let us know what skills you NEED on the following page.</p>
-<form method="post" action="skills.php">
-  <table cellpadding="5" style="border: 1px solid silver;">
-    <tr>
-      <th>Skill</th>
-      <th>I can OFFER this skill</th>
-    </tr>
-    <?php while ($row = $skills->fetch_assoc()) { ?>
-    <tr>
-      <td><?=$row["skillname"];?></td>
-      <td align="center"><input type="checkbox" name="checked[]" value="<?=$row['id']?>" id="<?=$row['skillname']?>" /></td>
-    </tr>
-    <?php } ?>
-  </table>
-  <input name="Submit" class="modern" type="submit" id="Submit" value="Step 3 &gt;&gt;">
-</form>
+<div class="container">
+    
+    <h1><span class="fa fa-user-plus fa-fw"></span> Sign Up</h1>
+
+    <h3>Step 2: Please tell us what skills you can offer:</h3>
+    
+    <p class="my-notify-info">You'll be able to let us know what skills you NEED on the following page.</p>
+    <form method="post" action="skills.php">
+      <table cellpadding="5" style="border: 1px solid silver;">
+        <tr>
+          <th>Skill</th>
+          <th>I can OFFER this skill</th>
+        </tr>
+        <?php while ($row = $skills->fetch_assoc()) { ?>
+        <tr>
+          <td><?=$row["skillname"];?></td>
+          <td align="center"><input type="checkbox" name="checked[]" value="<?=$row['id']?>" id="<?=$row['skillname']?>" /></td>
+        </tr>
+        <?php } ?>
+      </table>
+      <input name="Submit" class="modern" type="submit" id="Submit" value="Step 3 &gt;&gt;">
+    </form>
+    
+</div>    
 <?php require_once 'footer.php'; ?>

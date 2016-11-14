@@ -25,7 +25,7 @@ if (isset($_POST['Submit'])) {
         queryMysql("INSERT INTO userskills (user_id, skill_id, skillRequested) VALUES ($user_id, $value, '1')");
 	}
     
-    // Redirect to home page
+    // Redirect to home page with skills update success message
     
     header("location: index.php?updateStatus=success&action=Skills");
 }
@@ -34,27 +34,35 @@ if (isset($_POST['Submit'])) {
 
 <!-- Display the form -->
 
-<h3>Step 3: Please tell us what help you NEED:</h3>
-
-<form method='post' action='skills1.php'>    
-    <table cellspacing="5" style="border: 1px solid silver;">
-    <tr>
-        <th>Skill</th>
-        <th>I NEED help with</th>
-    </tr>
-        
-    <?php while ($row = $skills->fetch_assoc()) { ?>    
-    <tr>
-        <td><?=$row["skillname"];?></td>
-        <td align="center">
-            <input type="checkbox" name="checked[]" value="<?=$row['id']?>" id="<?=$row['skillname']?>" />
-        </td>
-    </tr>
-        
-    <?php } ?>
+<div class="container">
     
-    </table>
-        <input name="Submit" class="modern" type="submit" id="Submit" value="Finish">
-</form>
+    <h1><span class="fa fa-user-plus fa-fw"></span> Sign Up</h1>
+
+    <h3>Step 3: Please tell us what help you NEED:</h3>
+
+    <form method='post' action='skills1.php'>    
+        <table cellspacing="5" style="border: 1px solid silver;">
+        <tr>
+            <th>Skill</th>
+            <th>I NEED help with</th>
+        </tr>
+            
+        <!-- Loop through skills and output skill name and correspoding checkbox -->
+
+        <?php while ($row = $skills->fetch_assoc()) { ?>    
+        <tr>
+            <td><?=$row["skillname"];?></td>
+            <td align="center">
+                <input type="checkbox" name="checked[]" value="<?=$row['id']?>" id="<?=$row['skillname']?>" />
+            </td>
+        </tr>
+
+        <?php } ?>
+
+        </table>
+            <input name="Submit" class="modern" type="submit" id="Submit" value="Finish">
+    </form>
+    
+</div>
 
 <?php require_once 'footer.php'; ?>

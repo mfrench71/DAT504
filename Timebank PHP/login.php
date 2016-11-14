@@ -32,50 +32,58 @@
                 $error = "<div class='my-notify-error'>Username/Password invalid</div>";
             }
             
-            // If there is a result (match), set session variables and display logged in message
+            // If there is a result (match), set session variables
     
             else {
                 
                 $_SESSION['username'] = $username;
                 $_SESSION['password'] = $password;
+                
+                // Redirect to home page  and display login success message
+                
                 header("location: index.php?updateStatus=success&action=Login");
             }
         }
     }
 ?>
 
-<h1>Log In</h1>
+<div class="container">
 
-<h3>Please enter your details to log in</h3>
+    <h1><span class="fa fa-sign-in fa-fw"></span> Log In</h1>
 
-<!-- Display Login Form -->
+    <h3>Please enter your details to log in</h3>
 
-<form method="post" action="login.php">
-<?=$error;?>
-<table>
-	<tr>
-    	<td>
-			<label for="username">Username</label>
-		</td>
-    	<td>
-        	<input name="username" type="text" class="simple-input" value="<?=$username;?>" size="35" maxlength="255">
-       	</td>
-	</tr>
-	<tr>
-		<td>
-			<label for="password">Password</label>
-		</td>
-   		<td>
-   			<input name="password" type="password" class="simple-input" value="<?=$password;?>" size="35" maxlength="16">
-   		</td>
-  	<tr>
-  		<td> 
-			<input type="submit" class="modern" value="Login">
-		</td>
-		<td>
-		</td>
-	</tr>
-</table>
-</form>
+    <!-- Display Login Form -->
 
+    <form method="post" action="login.php">
+        <!-- Error message placeholder -->
+        <?=$error;?>
+        <table>
+            <tr>
+                <td>
+                    <label for="username">Username</label>
+                </td>
+                <td>
+                    <input name="username" type="text" class="simple-input" value="<?=$username;?>" size="35" maxlength="255">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="password">Password</label>
+                </td>
+                <td>
+                    <input name="password" type="password" class="simple-input" value="<?=$password;?>" size="35" maxlength="16">
+                </td>
+            <tr>
+                <td> 
+                    <input type="submit" class="modern" value="Login">
+                </td>
+                <td>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</div>
+    
 <?php require_once 'footer.php'; ?>
