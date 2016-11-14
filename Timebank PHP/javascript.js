@@ -75,7 +75,9 @@ function C(name) {
     xhttp.open("POST", "checkPassword.php", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("password=" + password.value);
-} 
+}
+
+// jQuery function to hide status messages on click
 
 $(document).ready(function(){
     $(".my-notify-success").click(function(){

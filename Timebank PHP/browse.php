@@ -2,11 +2,17 @@
 
 <?php
 
+    // If form submitted, set selected skill ID to form value
+    // Otherwise, set to wildcard to show all
+
     if (isset($_POST['offered_id'])) {
         $selectedOfferedSkill = $_POST['offered_id'];
     } else {
         $selectedOfferedSkill = "%";
     }
+
+    // If form submitted, set selected skill ID to form value
+    // Otherwise, set to wildcard to show all
 
     if (isset($_POST['requested_id'])) {
         $selectedRequestedSkill = $_POST['requested_id'];
@@ -14,11 +20,19 @@
         $selectedRequestedSkill = "%";
     }
 
+    // Query DB for all offered skills
+
     $skillsOfferedMenu = queryMysql("SELECT DISTINCT skills.skillname, skills.id FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillOffered = 1 ORDER BY skillname ASC");
+
+    // Query DB for all requested skills
 
     $skillsRequestedMenu = queryMysql("SELECT DISTINCT skills.skillname, skills.id FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 1 ORDER BY skillname ASC");
 
+    // Query DB for offered skills filtered by select menu
+
     $skillsOffered = queryMysql("SELECT users.id AS user_id, username, firstname, lastname, skills.skillname, skills.id, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillOffered = 1 AND timeOffered = 0 AND skills.id LIKE '$selectedOfferedSkill'");
+
+    // Query DB for selected skills filtered by select menu
 
     $skillsRequested = queryMysql("SELECT users.id AS user_id, username, firstname, lastname, skills.skillname, skills.id, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 1 AND timeAccepted = 0 AND skills.id LIKE '$selectedRequestedSkill'");
 
@@ -29,6 +43,8 @@
     <h1><span class="fa fa-list fa-fw"></span> Browse</h1>
     
         <?php if (!$loggedin) { ?>
+    
+            <!-- If the user is not logged in, display message -->
         
             <div class = "my-notify-info">Please <a href="signup.php">sign up</a> or <a href="login.php">log in</a> to offer your own skills or request help.</div>
         
@@ -39,6 +55,8 @@
         <!-- Community Skills Offered -->
         
         <h3>Community Skills Offered:</h3>
+        
+        <!-- Display select menu -->
         
         <form method="POST" action="browse.php">
         <select name="offered_id">
@@ -74,6 +92,8 @@
         <!-- Community Skills Needed -->
         
         <h3>Community Skills Requested:</h3>
+        
+        <!-- Display select menu -->
         
         <form method="POST" action="browse.php">
         <select name="requested_id">

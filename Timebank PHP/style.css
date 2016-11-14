@@ -52,6 +52,13 @@ html, body {
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
+hr { 
+    border: 0;
+    height: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3); 
+}
+
 #buttonLeft, buttonRight {
     display: inline-block;
     float:left;
@@ -211,11 +218,17 @@ html, body {
   color: white;
 }
 
-.modern:hover  { background: #33ff77; }
+.modern:hover { 
+    background: #33ff77; 
+}
 
-.modernOrange:hover  { background: #ffa366; }
+.modernOrange:hover {
+    background: #ffa366;
+}
 
-.modernYellow:hover {background: #ffe680;}
+.modernYellow:hover {
+    background: #ffe680;
+}
 
 #meter div {
     height: 20px;

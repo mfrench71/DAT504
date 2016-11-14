@@ -33,10 +33,6 @@ $updateStatus = "";
     
     // Display skill requests that match logged in user's skill offers
     
-    //$skillsRequestedMatched = queryMysql("SELECT users.*, skills.skillname, userskills.id AS userskills_id, userskills.timeOffered FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 1 AND timeOffered = 0 AND userskills.skill_id IN (SELECT skill_id FROM userskills WHERE user_id = '$user_id' AND skillOffered = 1)");
-    
-    // Changed to add 'Pending offer' functionality
-    
     $skillsRequestedMatched = queryMysql("SELECT users.*, skills.skillname, userskills.id AS userskills_id, userskills.timeOffered FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 1 AND userskills.skill_id IN (SELECT skill_id FROM userskills WHERE user_id = '$user_id' AND skillOffered = 1)");
     
     // Direct offers from other users
@@ -121,6 +117,8 @@ $updateStatus = "";
                 }
             ?>
             
+            <hr />
+            
             <h3>These are your skills:</h3>
             
             <!-- If user has skills to offer, display them -->
@@ -140,6 +138,8 @@ $updateStatus = "";
                 echo "<div class = 'my-notify-info'>You currently have no skills to offer.</div>";
             
              } ?>
+            
+            <hr />
 
             <h3>This is the help you need:</h3>
             
