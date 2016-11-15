@@ -64,6 +64,26 @@ html, body {
     background: url(http://i44.tinypic.com/xqm64m.gif) 5px 50% no-repeat;
 }
 
+.badge {
+    background: radial-gradient( center -9px, circle closest-side, white 0, red 26px );
+    background: -moz-radial-gradient( center -9px, circle closest-side, white 0, red 26px );
+    background: -ms-radial-gradient( center -9px, circle closest-side, white 0, red 26px );
+    background: -o-radial-gradient( center -9px, circle closest-side, white 0, red 26px );
+    background: -webkit-radial-gradient( center -9px, circle closest-side, white 0, red 26px );
+    background-color: red;
+    border: 2px solid white;
+    border-radius: 12px; /* must be 1/2 of ( border-width*2 + width ) */
+    box-shadow: 1px 1px 1px black;
+    color: white;
+    font: bold 17px/15px Helvetica, Verdana, Tahoma;
+    height: 18px; /* height + padding-top must equal width */
+    padding-top: 2px; /* height + padding-top must equal width */
+    text-align: center;
+    width: 20px;
+    margin-top: -25px;
+    margin-left: 150px;
+}
+
 hr { 
     border: 0;
     height: 0;

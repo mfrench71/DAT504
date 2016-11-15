@@ -35,7 +35,7 @@
         
         else {
             
-            // Email validation
+            // Email validation: clean and validate email address
             
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $error = "<div class='my-notify-warning'>Please enter a valid email address.</div>";
