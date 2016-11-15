@@ -2,17 +2,12 @@
     session_start();
     require_once 'functions.php';
     require_once 'meta.php';
-
-    // Set default values
-
-    $userstr = ' (Guest)';
     
     // If user is logged in, set username session
 
     if (isset($_SESSION['username'])) {
         $username = $_SESSION['username'];
         $loggedin = TRUE;
-        $userstr = " ($username)";
     
     }
         else $loggedin = FALSE;

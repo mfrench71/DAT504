@@ -1,7 +1,7 @@
 <?php
 
     // Preferences
-    $appname = "Timebank";
+    $appname = "Time Bank";
 
     // MySQL details
     $db_hostname = 'localhost';

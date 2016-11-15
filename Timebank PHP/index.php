@@ -59,7 +59,7 @@ $updateStatus = "";
         $accept_direct_offer_user_id = $_POST['accept_direct_offer_user_id'];
         $accept_direct_offer_userskills_id = $_POST['accept_direct_offer_userskills_id'];
         
-        // Logged in user no longer needs the skill they accepted so set this to 0
+        // Logged in user no longer needs the skill they accepted so set this to 0 and acceptance details
         queryMysql("UPDATE userskills SET skillRequested = 0, timeAccepted = 1, timeAcceptedByUserId = '$user_id' WHERE id = '$accept_direct_offer_userskills_id'");
         
         // Subtract one credit from logged in user
@@ -101,67 +101,80 @@ $updateStatus = "";
         
         <div class = "panel0">
         
-        <h3>Your Profile Summary</h3>
-            <p><span class="fa fa-user-circle fa-fw"></span> You are logged in as <?=$username?></p> 
-        
-            <p><span class="fa fa-money fa-fw"></span> Your Time Balance (Credit) is: <?=$timeBalance?></p>
+            <h3>Your Profile Summary</h3>
             
-            <?php
-        
-                // Time credit notifications
-        
-                if($timeBalance > 0 && $timeBalance <= 2) {
-                    echo "<div class = 'my-notify-warning'>Your time credit is low! Why not offer some time?</div>";
-                } elseif ($timeBalance == 0) {
-                    echo "<div class = 'my-notify-error'>You have no time credit!.</div>";
-                }
-            ?>
+            <div>
             
-            <hr />
+                <p><span class="fa fa-user-circle fa-fw"></span> You are logged in as <?=$username?></p> 
+
+                <p><span class="fa fa-money fa-fw"></span> Your Time Credit is: <?=$timeBalance?></p>
+
+                <?php
+
+                    // Low/zero time credit notifications
+
+                    if($timeBalance > 0 && $timeBalance <= 2) {
+                        echo "<div class = 'my-notify-warning'>Your time credit is low! Why not offer some time?</div>";
+                    } elseif ($timeBalance == 0) {
+                        echo "<div class = 'my-notify-error'>You have no time credit!.</div>";
+                    }
+                ?>
+
+                <hr />
+                
+            </div>
             
             <h3>These are your skills:</h3>
             
-            <!-- If user has skills to offer, display them -->
+            <div>
             
-             <?php if(mysqli_num_rows($skillsOffered) > 0) { ?>
+                <!-- If user has skills to offer, display them -->
 
-                <ul id="userSkills">
-                    <?php while ($skillsOfferedRow = $skillsOffered->fetch_assoc()) { ?>
-                    <li><?=$skillsOfferedRow['skillname']?></li>
-                    <?php } ?>
-                </ul>
-            
-            <!-- Otherwise, display info message -->
-            
-            <?php } else {
-            
-                echo "<div class = 'my-notify-info'>You currently have no skills to offer.</div>";
-            
-             } ?>
-            
-            <hr />
+                 <?php if(mysqli_num_rows($skillsOffered) > 0) { ?>
+
+                    <ul id="userSkills">
+                        <?php while ($skillsOfferedRow = $skillsOffered->fetch_assoc()) { ?>
+                        <li><?=$skillsOfferedRow['skillname']?></li>
+                        <?php } ?>
+                    </ul>
+
+                <!-- Otherwise, display info message -->
+
+                <?php } else {
+
+                    echo "<div class = 'my-notify-info'>You currently have no skills to offer.</div>";
+
+                 } ?>
+
+                <hr />
+                
+            </div>    
 
             <h3>This is the help you need:</h3>
             
-            <!-- If user has skills they need, display them -->
+            <div>
             
-            <?php if(mysqli_num_rows($skillsRequested) > 0) { ?>
+                <!-- If user has skills they need, display them -->
 
-            <ul>
-                <?php while ($skillsRequestedRow = $skillsRequested->fetch_assoc()) { ?>
-                    <li><?=$skillsRequestedRow['skillname']?></li>
-                <?php } ?> 
-            </ul>
+                <?php if(mysqli_num_rows($skillsRequested) > 0) { ?>
 
-            <!-- Otherwise, display info message -->
-            
-            <?php } else {
-            
-                echo "<div class = 'my-notify-info'>You currently have no skills requested.</div>";
-            
-             } ?>
-            
+                <ul>
+                    <?php while ($skillsRequestedRow = $skillsRequested->fetch_assoc()) { ?>
+                        <li><?=$skillsRequestedRow['skillname']?></li>
+                    <?php } ?> 
+                </ul>
+
+                <!-- Otherwise, display info message -->
+
+                <?php } else {
+
+                    echo "<div class = 'my-notify-info'>You currently have no skills requested.</div>";
+
+                 } ?>
+                
             </div>
+            
+        </div>
        
     </div>
     
@@ -226,7 +239,7 @@ $updateStatus = "";
             
             <?php if(mysqli_num_rows($directOffer) > 0) { ?>
             
-                <p>You've received these direct offers of help from members of the Timebank community:</p>
+                <p>You've received these direct offers of help from members of the <?=$appname;?> community:</p>
 
                 <?php while ($directOfferRow = $directOffer->fetch_assoc()) { ?>
         
@@ -252,10 +265,13 @@ $updateStatus = "";
                         </div>
 
                         <?php } else { ?>
+                        
                             <!-- Otherwise show warning -->
+                        
                             <div class ="my-notify-warning">
                                 Earn credits to accept offers!
                             </div>            
+                        
                         <?php } ?>
         
                         <!-- Reject Offer button -->
@@ -292,7 +308,9 @@ $updateStatus = "";
 
 <?php } else { ?>
 
-    <div class = "my-notify-info">Please <a href="signup.php">sign up</a> or <a href="login.php">log in</a> to join our community.</div>
+    <div class = "my-notify-info">
+        Please <a href="signup.php">sign up</a> or <a href="login.php">log in</a> to join our community.
+    </div>
 
 <?php } ?>
 

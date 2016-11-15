@@ -27,7 +27,7 @@ if (isset($_POST['Submit'])) {
     
     // Redirect to home page with skills update success message
     
-    header("location: index.php?updateStatus=success&action=Skills");
+    header("location: index.php?updateStatus=success&action=Signup");
 }
 
 ?>

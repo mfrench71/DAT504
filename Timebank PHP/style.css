@@ -52,6 +52,18 @@ html, body {
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
+.panel0 h3 {
+    background: url(http://i42.tinypic.com/xpa25l.gif) 5px 50% no-repeat;
+    display: block;
+    clear: both;
+    height: auto;
+    padding: 0px 40px;    
+}
+
+.panel0 h3.opened {
+    background: url(http://i44.tinypic.com/xqm64m.gif) 5px 50% no-repeat;
+}
+
 hr { 
     border: 0;
     height: 0;
