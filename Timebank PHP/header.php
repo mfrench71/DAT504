@@ -1,5 +1,6 @@
 <?php
     session_start();
+    ob_start();
     require_once 'functions.php';
     require_once 'meta.php';
     

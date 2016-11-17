@@ -41,7 +41,7 @@ $updateStatus = "";
     
     // Offers accepted and awaiting approval
     
-    $approval = queryMysql("SELECT users.id AS user_id, username, firstname, lastname, skills.id AS skills_id, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.timeOfferedByUserId LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 0 AND timeOffered = 1 AND timeAccepted = 1 AND timeApproved = 0 AND  userskills.timeOfferedByUserId IN (SELECT timeOfferedByUserId FROM userskills WHERE user_id = '$user_id' AND timeOffered = 1)");
+    $approval = queryMysql("SELECT users.id AS user_id, username, firstname, lastname, email, skills.id AS skills_id, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.timeOfferedByUserId LEFT JOIN skills ON userskills.skill_id = skills.id WHERE skillRequested = 0 AND timeOffered = 1 AND timeAccepted = 1 AND timeApproved = 0 AND  userskills.timeOfferedByUserId IN (SELECT timeOfferedByUserId FROM userskills WHERE user_id = '$user_id' AND timeOffered = 1)");
     
     // Has offer form been submitted?
     // If yes, update userskills table
@@ -63,7 +63,7 @@ $updateStatus = "";
         $accept_direct_offer_user_id = $_POST['accept_direct_offer_user_id'];
         $accept_direct_offer_userskills_id = $_POST['accept_direct_offer_userskills_id'];
         
-        // Logged in user no longer needs the skill they accepted so set this to 0 and acceptance details
+        // Logged in user no longer needs the skill they accepted so set this to 0 and update acceptance details
         queryMysql("UPDATE userskills SET skillRequested = 0, timeAccepted = 1, timeAcceptedByUserId = '$user_id' WHERE id = '$accept_direct_offer_userskills_id'");
         
         // Refresh page
@@ -146,34 +146,38 @@ $updateStatus = "";
                     <p>You have accepted the following help:</p>
                 
                     <?php while ($approvalRow = $approval->fetch_assoc()) { ?>
+                    
+                        <div class= "panel0Inside">
                 
-                        <p><span class="fa fa-user-circle-o fa-fw"></span> <?=$approvalRow['username']?><br/>
-                        Name: <?=$approvalRow['firstname']." ".$approvalRow['lastname'];?><br/>
-                        <strong><?=$approvalRow['skillname'];?></strong>
-                        </p>
-                    
-                        <p>Please confirm that this is now complete.</p>
-                    
-                        <!-- Approve button -->
-                    
-                        <div id = "buttonLeft">
+                            <p><span class="fa fa-user-circle-o fa-fw"></span> <?=$approvalRow['username']?>(<?=$approvalRow['firstname']." ".$approvalRow['lastname'];?>)<br/>
+                                Email: <a href="mailto:<?=$approvalRow['email']?>"><?=$approvalRow['email']?></a><br />
+                            <strong><?=$approvalRow['skillname'];?></strong>
+                            </p>
 
-                            <form action="index.php" method="post" name="form1" id="form1">
-                                <input type="submit" class="modern" name="ApproveConfirm" id="submit" value="Approve">
-                                <input type="hidden" name="approve_confirm_user_id" value=<?=$approvalRow['user_id']?>>
-                                <input type="hidden" name="approve_confirm_userskills_id" value=<?=$approvalRow['userskills_id']?>>
-                            </form>
-                            
-                        </div>
-                    
-                        <!-- Reject button -->
-                    
-                        <div id = "buttonRight">
-        
-                            <form action="index.php" method="post" name="form1" id="form1">
-                                <input type="submit" class="modernYellow" name="ApproveReject" id="submit" value="Reject">
-                                <input type="hidden" name="approve_reject_userskills_id" value=<?=$approvalRow['userskills_id']?>>
-                            </form>
+                            <p>Please confirm that this is now complete.</p>
+
+                            <!-- Approve button -->
+
+                            <div id = "buttonLeft">
+
+                                <form action="index.php" method="post" name="form1" id="form1">
+                                    <input type="submit" class="modern" name="ApproveConfirm" id="submitApprove" value="Approve">
+                                    <input type="hidden" name="approve_confirm_user_id" value=<?=$approvalRow['user_id']?>>
+                                    <input type="hidden" name="approve_confirm_userskills_id" value=<?=$approvalRow['userskills_id']?>>
+                                </form>
+
+                            </div>
+
+                            <!-- Reject button -->
+
+                            <div id = "buttonRight">
+
+                                <form action="index.php" method="post" name="form1" id="form1">
+                                    <input type="submit" class="modernYellow" name="ApproveReject" id="submit" value="Reject">
+                                    <input type="hidden" name="approve_reject_userskills_id" value=<?=$approvalRow['userskills_id']?>>
+                                </form>
+
+                            </div>
                         
                         </div>
 
@@ -363,10 +367,10 @@ $updateStatus = "";
         
                         <div id = "buttonRight">
         
-                        <form action="index.php" method="post" name="form1" id="form1">
-                            <input type="submit" class="modernYellow" name="RejectDirectOffer" id="submit" value="No Thanks">
-                            <input type="hidden" name="reject_direct_offer_userskills_id" value=<?=$directOfferRow['userskills_id']?>>
-                        </form>
+                            <form action="index.php" method="post" name="form1" id="form1">
+                                <input type="submit" class="modernYellow" name="RejectDirectOffer" id="submit" value="No Thanks">
+                                <input type="hidden" name="reject_direct_offer_userskills_id" value=<?=$directOfferRow['userskills_id']?>>
+                            </form>
                         
                         </div>
                         
@@ -392,9 +396,48 @@ $updateStatus = "";
 
 <?php } else { ?>
 
-    <div class = "my-notify-info">
-        Please <a href="signup.php">sign up</a> or <a href="login.php">log in</a> to join our community.
+    <div class = "container">
+        
+        <h1><span class="fa fa-home fa-fw"></span> Welcome to <?=$appname;?></h1>
+
+        <!--
+        <div class = "my-notify-info">
+            Please <a href="signup.php">sign up</a> or <a href="login.php">log in</a> to join our community.
+        </div>
+        -->
+        
     </div>
+
+    <div class="containerHome">
+        
+        <div class ="columnHome">
+            <p class="intro">Time Bank is a way for people to share their knowledge and skills with their community and be rewarded for it - with time.</p><p>For every one hour you volunteer you can claim back the same amount. We call them credits, and you can save them up for those jobs you can’t manage or don’t have the skills or time for.</p><p>It’s as easy as that.</p>
+        </div>
+        
+        <div class="gutterHome"></div>
+        
+        <div class="columnHome">
+            
+            <div class = "browse" onClick="location.href='browse.php';">
+                <h1><span class="fa fa-list fa-fw"></span> Browse</h1>
+                <p>See what our community needs and what it can offer.</p>
+            </div>
+            
+            <div class="signup" onClick="location.href='signup.php';">
+                <h1><span class="fa fa-user-plus fa-fw"></span> Sign Up</h1>
+                <p>Create an account to start sharing your knowledge and skills.</p>
+            </div>
+            
+            <div class="login" onClick="location.href='login.php';">
+                <h1><span class="fa fa-sign-in fa-fw"></span> Log In</h1>
+                <p>Already have a Time Bank account? Welcome back.</p>
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <br style="clear:both;"/>   
 
 <?php } ?>
 

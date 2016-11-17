@@ -4,7 +4,7 @@
 
 // Query DB for list of skills
 
-$skills = queryMysql("SELECT * FROM skills ORDER BY skillname WHERE suername");
+$skills = queryMysql("SELECT * FROM skills ORDER BY skillname");
 
 while ($row = $skills->fetch_assoc()) {
 

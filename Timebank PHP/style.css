@@ -17,6 +17,73 @@ html, body {
     padding: 0 8px;
 }
 
+.containerHome {
+    width:75%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 8px;
+}
+
+.columnHome {
+    width: 40%;
+    padding: 8px;
+    float: left;
+}
+
+.gutterHome {
+    width: 20%;
+    float: left;
+}
+
+.columnHome .intro {
+    color:#006633;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.columnHome p {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.columnHome .browse {
+    background: #eeeeee;
+    padding: 1px 12px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.columnHome .signup {
+    background: #eeeeee;
+    padding: 1px 12px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.columnHome .login {
+    background: #eeeeee;
+    padding: 1px 12px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.browse:hover {
+    color: white;
+    background: #006633;
+    cursor: pointer;
+}
+
+.signup:hover {
+    color: white;
+    background: #006633;
+    cursor: pointer;
+}
+
+.login:hover {
+    color: white;
+    background: #006633;
+    cursor: pointer;
+}
+
 .column {
     width:32%;
     float:left;
@@ -52,12 +119,21 @@ html, body {
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
+.panel0Inside {
+    background: #f2f2f2;
+    border: 1px solid silver;
+    border-radius: 3px;
+    padding: 1px 8px;
+    margin-bottom: 8px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
 .panel0 h3 {
     background: url(http://i42.tinypic.com/xpa25l.gif) 5px 50% no-repeat;
     display: block;
     clear: both;
     height: auto;
-    padding: 0px 40px;    
+    padding: 0px 40px;
 }
 
 .panel0 h3.opened {
@@ -156,7 +232,7 @@ hr {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #009933;
+    background-color: #006633;
     border-radius: 3px;
     border: 1px solid rgba(0,0,0,0.1);
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
@@ -178,7 +254,7 @@ hr {
 #footer {
     margin: 0;
     padding: 0;
-    background-color: #009933;
+    background-color: #006633;
     border-radius: 3px;
 }
 
@@ -195,7 +271,7 @@ hr {
 .simple-input {
     display: block;
     padding: 5px;
-    border: 4px solid #009933;
+    border: 4px solid #006633;
     border-radius: 5px;
     color: #333;
     transition: all 0.3s ease-out;
@@ -208,27 +284,14 @@ hr {
 .simple-input:focus {
     outline: none;
     border-radius: 8px;
-    border-color: #33ff77;
+    border-color: #009933;
 }
 
 .modern {
   display: inline-block;
   margin-bottom: 8px;
-  margin-top: 8px;
   padding: 6px 12px;
-  background: #00cc44;
-  border: 1px solid rgba(0,0,0,0.15);
-  border-radius: 4px;
-  transition: all 0.3s ease-out;
-  text-decoration: none;
-  color: white;
-}
-
-.modernOrange {
-  display: inline-block;
-  margin-bottom: 8px;
-  padding: 6px 12px;
-  background: #ff6600;
+  background: #006633;
   border: 1px solid rgba(0,0,0,0.15);
   border-radius: 4px;
   transition: all 0.3s ease-out;
@@ -239,7 +302,6 @@ hr {
 .modernYellow {
   display: inline-block;
   margin-bottom: 8px;
-  margin-top: 8px;
   margin-left: 4px;
   padding: 6px 12px;
   background: #ffcc00;
@@ -251,7 +313,7 @@ hr {
 }
 
 .modern:hover { 
-    background: #33ff77; 
+    background: #009933; 
 }
 
 .modernOrange:hover {

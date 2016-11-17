@@ -63,7 +63,6 @@
             <option value="%">Show All</option>
                 <?php 
                     while ($skillsOfferedMenuRow = $skillsOfferedMenu->fetch_assoc()) {
-                        unset($id, $name);
                         $id = $skillsOfferedMenuRow['id'];
                         $name = $skillsOfferedMenuRow['skillname']; 
                         echo '<option value="'.$id.'">'.$name.'</option>';
@@ -78,7 +77,9 @@
 
             <div class = "panel">
                 <p><span class="fa fa-user-circle fa-fw"></span> <?=$skillsOfferedRow['username']?><br/>
-                Name: <?=$skillsOfferedRow['firstname']." ".$skillsOfferedRow['lastname'];?><br/>
+                <?php if ($loggedin) { ?>
+                    Name: <?=$skillsOfferedRow['firstname']." ".$skillsOfferedRow['lastname'];?><br/>
+                <?php } ?>
                 Is offering help with: <strong><?=$skillsOfferedRow['skillname']?></strong>
                 </p>
             </div>
@@ -100,7 +101,6 @@
             <option value="%">Show All</option>
                 <?php 
                     while ($skillsRequestedMenuRow = $skillsRequestedMenu->fetch_assoc()) {
-                        unset($id, $name);
                         $id = $skillsRequestedMenuRow['id'];
                         $name = $skillsRequestedMenuRow['skillname']; 
                         echo '<option value="'.$id.'">'.$name.'</option>';
@@ -115,7 +115,9 @@
 
             <div class = "panel1">
                 <p><span class="fa fa-user-circle-o fa-fw"></span> <?=$skillsRequestedRow['username']?><br/>
-                Name: <?=$skillsRequestedRow['firstname']." ".$skillsRequestedRow['lastname'];?><br/>
+                <?php if ($loggedin) { ?>
+                    Name: <?=$skillsRequestedRow['firstname']." ".$skillsRequestedRow['lastname'];?><br/>
+                <?php } ?>
                 Is requesting help with: <strong><?=$skillsRequestedRow['skillname']?></strong>
                 </p>
             </div>
