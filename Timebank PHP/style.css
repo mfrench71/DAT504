@@ -140,6 +140,13 @@ html, body {
     background: url(http://i44.tinypic.com/xqm64m.gif) 5px 50% no-repeat;
 }
 
+.tableSignup {
+    margin-bottom: 8px;
+    padding: 8px;
+    border: 3px solid #006633;
+    border-radius: 5px;
+}
+
 .badge {
     background: radial-gradient( center -9px, circle closest-side, white 0, red 26px );
     background: -moz-radial-gradient( center -9px, circle closest-side, white 0, red 26px );
@@ -271,14 +278,14 @@ hr {
 .simple-input {
     display: block;
     padding: 5px;
-    border: 4px solid #006633;
+    border: 3px solid #006633;
     border-radius: 5px;
     color: #333;
     transition: all 0.3s ease-out;
 }
 
 .simple-input:hover {
-    border-radius: 8px
+    border-radius: 5px
 }
 
 .simple-input:focus {

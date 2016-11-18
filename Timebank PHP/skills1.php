@@ -3,6 +3,7 @@
 // Get username from session variable
 
 $username = $_SESSION['username'];
+$error = "";
 
 // Query DB for user ID of logged in user so we can insert this into userskills table
 
@@ -17,17 +18,27 @@ $skills = queryMysql("SELECT * FROM skills ORDER BY skillname");
 // Has the form been submitted?
 
 if (isset($_POST['Submit'])) {
-
-    // If yes, insert user ID, skill ID checkbox value(s) and skillRequested into DB
     
-    $checkboxes = isset($_POST['checked']) ? $_POST['checked'] : array();
-	foreach ($checkboxes as $value) {
+    // $_POST['checked'] only exists if at least one checkbox is ticked, so check for this
+    
+    if(isset($_POST['checked'])) {
+        $checkboxes = $_POST['checked'];
+        // If yes, loop through checkbox array, inserting user ID, skill ID, checkbox and skillRequested values into DB
+        foreach ($checkboxes as $value) {
         queryMysql("INSERT INTO userskills (user_id, skill_id, skillRequested) VALUES ($user_id, $value, '1')");
-	}
+    }
+        
+    // Redirect to next page
     
-    // Redirect to home page with skills update success message
+    header("location: index.php");
+        
+    } else {
+        
+        // Otherwise, display an error
+        
+        $error = "<div class='my-notify-warning'>Please select at least one skill.</div>";
+    }
     
-    header("location: index.php?updateStatus=success&action=Signup");
 }
 
 ?>
@@ -40,8 +51,9 @@ if (isset($_POST['Submit'])) {
 
     <h3>Step 3: Please tell us what help you NEED:</h3>
 
-    <form method='post' action='skills1.php'>    
-        <table cellspacing="5" style="border: 1px solid silver;">
+    <form method='post' action='skills1.php'>
+        <?=$error?>
+        <table class="tableSignup" cellpadding="5">
         <tr>
             <th>Skill</th>
             <th>I NEED help with</th>
