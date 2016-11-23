@@ -63,7 +63,8 @@ $updateStatus = "";
         $accept_direct_offer_user_id = $_POST['accept_direct_offer_user_id'];
         $accept_direct_offer_userskills_id = $_POST['accept_direct_offer_userskills_id'];
         
-        // Logged in user no longer needs the skill they accepted so set this to 0 and update acceptance details
+        // Hide the logged-in user's skill requirement (pending approval) and update acceptance details
+        // We don't want other user's to be able to offer the same skill
         queryMysql("UPDATE userskills SET skillRequested = 0, timeAccepted = 1, timeAcceptedByUserId = '$user_id' WHERE id = '$accept_direct_offer_userskills_id'");
         
         // Refresh page
@@ -87,14 +88,14 @@ $updateStatus = "";
     }
     
     // Has the APPROVAL form been submitted?
-    // If yes, update the userskills table
+    // If yes, update the userskills table and timeBalance for each user
     
     if (isset($_POST['ApproveConfirm'])) {
         
         $approve_confirm_user_id = $_POST['approve_confirm_user_id'];
         $approve_confirm_userskills_id = $_POST['approve_confirm_userskills_id'];
         
-        // Logged in user no longer needs the skill they accepted so set this to 0 and acceptance details
+        // Update timeApproved flag
         queryMysql("UPDATE userskills SET timeApproved = 1 WHERE id = '$approve_confirm_userskills_id'");
         
         // Subtract one credit from logged in user
@@ -194,7 +195,7 @@ $updateStatus = "";
             
             <div>
             
-                <p><span class="fa fa-user-circle fa-fw"></span> You are logged in as <?=$username?></p> 
+                <p><span class="fa fa-user-circle fa-fw"></span> You are logged in as <a href="profile.php"><?=$username?></a></p> 
 
                 <p><span class="fa fa-money fa-fw"></span> Your Time Credit is: <?=$timeBalance?></p>
 

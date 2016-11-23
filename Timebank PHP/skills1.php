@@ -23,14 +23,15 @@ if (isset($_POST['Submit'])) {
     
     if(isset($_POST['checked'])) {
         $checkboxes = $_POST['checked'];
-        // If yes, loop through checkbox array, inserting user ID, skill ID, checkbox and skillRequested values into DB
+        // If yes, loop through checkbox array, updating user ID, skill ID, checkbox and skillRequested values into DB
         foreach ($checkboxes as $value) {
-        queryMysql("INSERT INTO userskills (user_id, skill_id, skillRequested) VALUES ($user_id, $value, '1')");
-    }
+        // queryMysql("INSERT INTO userskills (user_id, skill_id, skillRequested) VALUES ($user_id, $value, '1')");
+            queryMysql("UPDATE userskills SET skillRequested = '1' WHERE user_id = '$user_id' AND skill_id = '$value'");
+        }
         
-    // Redirect to next page
+        // Redirect to next page
     
-    header("location: index.php");
+        header("location: index.php?updateStatus=success&action=Profile%20Created");
         
     } else {
         

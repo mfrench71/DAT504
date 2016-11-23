@@ -1,45 +1,60 @@
-<?php require_once 'header.php';
+<?php 
 
-// Get username from session variable
+    require_once 'header.php';
 
-$username = $_SESSION['username'];
-$error = "";
+    // Get username from session variable
 
-// Query DB for user ID of logged in user so we can insert this into userskills table
+    $username = $_SESSION['username'];
+    $error = "";
 
-$user = queryMysql("SELECT id FROM users WHERE username = '$username'");
-$userrow = $user->fetch_assoc();
-$user_id = $userrow['id'];
+    // Query DB for user ID of logged in user so we can insert this into userskills table
 
-// Query DB for list of skills
+    $user = queryMysql("SELECT id FROM users WHERE username = '$username'");
+    $userrow = $user->fetch_assoc();
+    $user_id = $userrow['id'];
 
-$skills = queryMysql("SELECT * FROM skills ORDER BY skillname");
+    // Query DB for list of skills
 
-// Has the form been submitted?
+    $skills = queryMysql("SELECT * FROM skills ORDER BY skillname");
 
-if (isset($_POST['Submit'])) {
-    
-    // $_POST['checked'] only exists if at least one checkbox is ticked, so check for this
-    
-    if(isset($_POST['checked'])) {
-        $checkboxes = $_POST['checked'];
-        // If yes, loop through checkbox array, inserting user ID, skill ID, checkbox and skillOffered values into DB
-        foreach ($checkboxes as $value) {
-        queryMysql("INSERT INTO userskills (user_id, skill_id, skillOffered) VALUES ($user_id, $value, '1')");
+    $skillsReset = queryMysql("SELECT id FROM skills");
+
+    // Has the form been submitted?
+
+    if (isset($_POST['Submit'])) {
+
+        // $_POST['checked'] only exists if at least one checkbox is ticked, so check for this
+
+        if(isset($_POST['checked'])) {
+            
+            // Insert a row for EVERY skill and set to 0 initially (so we can develop Profile page!)
+            
+            while ($skillsResetRow = $skillsReset->fetch_assoc()) {
+                $skillValue =  $skillsResetRow['id'];
+                queryMysql("INSERT INTO userskills (user_id, skill_id, skillOffered) VALUES ($user_id, $skillValue, '0')");
+            } 
+            
+            // Insert checked values into userskills table
+            
+            $checkboxes = $_POST['checked'];
+            // Loop through checkbox array, updating user ID, skill ID, checkbox and skillOffered values into DB
+            foreach ($checkboxes as $value) {
+                //queryMysql("INSERT INTO userskills (user_id, skill_id, skillOffered) VALUES ($user_id, $value, '1')");
+                queryMysql("UPDATE userskills SET skillOffered = '1' WHERE user_id = '$user_id' AND skill_id = '$value'");
+            }
+
+        // Redirect to next page
+
+        header("location: skills1.php");
+
+        } else {
+
+            // Otherwise, display an error
+
+            $error = "<div class='my-notify-warning'>Please select at least one skill.</div>";
+        }
+
     }
-        
-    // Redirect to next page
-    
-    header("location: skills1.php");
-        
-    } else {
-        
-        // Otherwise, display an error
-        
-        $error = "<div class='my-notify-warning'>Please select at least one skill.</div>";
-    }
-    
-}
 
 ?>
 
@@ -69,5 +84,6 @@ if (isset($_POST['Submit'])) {
       <input name="Submit" class="modern" type="submit" id="Submit" value="Step 3 &gt;&gt;">
     </form>
     
-</div>    
+</div>
+
 <?php require_once 'footer.php'; ?>

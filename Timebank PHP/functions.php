@@ -9,7 +9,7 @@
     $db_username = 'root';
     $db_password = '';
 
-    // Create database connection
+    // Create database connection object
     $connection = new mysqli($db_hostname,$db_username,$db_password,$db_database);
 
     // Check database connection
@@ -23,19 +23,20 @@
         return $result;
     }
 
-    // Destroy session and clear data - user logout
-    function destroySession() {
-        $_SESSION=array();
-        if (session_id() != "" || isset($_COOKIE[session_name()]))
-        setcookie(session_name(), '', time()-2592000, '/');
+    // Unset and destroy session variable - user logout
+    function destroySession () {
+        session_unset();
         session_destroy();
     }
     
     // Remove potentially harmful code from user input
     function cleanString($var) {
         global $connection;
+        // Strip HTML
         $var = strip_tags($var);
+        // Convert characters to entities e.g. '<' becomes '&lt'
         $var = htmlentities($var);
+        // Strip slashes
         $var = stripslashes($var);
         return $connection->real_escape_string($var);
     }
