@@ -69,7 +69,7 @@ $updateStatus = "";
         
         // Refresh page
         
-        header("location: index.php?updateStatus=success&action=Accept");
+        header("location: index.php?updateStatus=success&action=Accept%20offer");
     }
     
     // Has the REJECT direct offer form been submitted?
@@ -84,7 +84,7 @@ $updateStatus = "";
         
         // Refresh page
         
-        header("location: index.php?updateStatus=success&action=Reject");
+        header("location: index.php?updateStatus=success&action=Reject%20offer");
     }
     
     // Has the APPROVAL form been submitted?
@@ -106,7 +106,7 @@ $updateStatus = "";
         
         // Refresh page
         
-        header("location: index.php?updateStatus=success&action=Approve");
+        header("location: index.php?updateStatus=success&action=Approval");
     }
     
     // Has the REJECT approval form been submitted?

@@ -17,12 +17,12 @@
 
     if ($result->num_rows) { ?>
 
-            <div class = "my-notify-warning">This username is taken</div>
+            <div class = "my-notify-warning">This username is taken.</div>
 
     <!-- If no, the username is available -->
 
     <?php } else { ?>
 
-            <div class = "my-notify-success">This username is available</div>
+            <div class = "my-notify-success">This username is available.</div>
     
     <?php } ?>
