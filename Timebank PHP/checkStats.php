@@ -9,12 +9,12 @@
 
     // Number of skills offered
 
-    $skillsOffered = queryMysql("SELECT * FROM userSkills WHERE skillOffered = 1");
+    $skillsOffered = queryMysql("SELECT * FROM userskills WHERE skillOffered = 1");
     $skillsOfferedStats = $skillsOffered->num_rows;
 
     // Number of skills requested
 
-    $skillsRequested = queryMysql("SELECT * FROM userSkills WHERE skillRequested = 1");
+    $skillsRequested = queryMysql("SELECT * FROM userskills WHERE skillRequested = 1");
     $skillsRequestedStats = $skillsRequested->num_rows;
 
     // Output formatted stats

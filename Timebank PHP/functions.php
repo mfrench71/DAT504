@@ -38,6 +38,7 @@
         $var = htmlentities($var);
         // Strip slashes
         $var = stripslashes($var);
+        // Escape characters in SQL string
         return $connection->real_escape_string($var);
     }
 ?>

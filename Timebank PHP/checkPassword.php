@@ -61,6 +61,7 @@
         }
 
         $strengthPercent = $strength / (float) $possiblePoints; 
+        // Round down to nearest integer
         $rating = floor($strengthPercent * 10);
         return $rating;
     }
@@ -81,6 +82,7 @@
        for ($i = 0; $i < 10; $i++) {
            echo "<div";
            if ($rating > $i) {
+               // Set class of rating DIV to change meter colours (see CSS)
                echo " class=\"rating-{$rating}\"";
            }
            echo "></div>";

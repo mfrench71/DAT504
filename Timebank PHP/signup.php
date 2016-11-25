@@ -30,36 +30,37 @@
         
         // Basic form validation (empty values)
 
-        if ($username == "" || $password == "" || $firstname == "" || $lastname == "")
+        if ($username == "" || $password == "" || $firstname == "" || $lastname == "") {
             $error = "<div class='my-notify-warning'>Not all fields were completed.</div>";
         
-        else {
+        } else {
             
             // Email validation: clean and validate email address
             
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $error = "<div class='my-notify-warning'>Please enter a valid email address.</div>";
-            }
             
-            else {
+            } else {
             
-                // If form values completed, query DB for existing username/email
+                // Query DB for existing username/email
 
                 $userResult = queryMysql("SELECT username FROM users WHERE username='$username'");
 
                 // If there's a result (username already in DB), display error message
 
-                if ($userResult->num_rows)
+                if ($userResult->num_rows) {
                     $error = "<div class='my-notify-warning'>That username already exists.</div>";
+            
+                } else {
                 
                 $emailResult = queryMysql("SELECT email FROM users WHERE email='$email'");
 
                 // If there's a result (email already in DB), display error message
 
-                if ($emailResult->num_rows)
+                if ($emailResult->num_rows) {
                     $error = "<div class='my-notify-warning'>An account with that email address already exists.</div>";
             
-                else {
+                } else {
 
                     // If no match, insert new user details into DB and set username session variable
 
@@ -73,6 +74,7 @@
             }
         }
     }
+}
 ?>
 
 <!-- Display sign up form -->

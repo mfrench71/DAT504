@@ -29,7 +29,7 @@ $updateStatus = "";
     
     // Logged in user: skills requested
     
-    $skillsRequested = queryMysql("SELECT skills.id, skills.skillname, userskills.id AS userskills_id FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE userskills.user_id = '$user_id' AND userskills.skillRequested = 1");
+    $skillsRequested = queryMysql("SELECT skills.id, skills.skillname FROM users LEFT JOIN userskills ON users.id = userskills.user_id LEFT JOIN skills ON userskills.skill_id = skills.id WHERE userskills.user_id = '$user_id' AND userskills.skillRequested = 1");
     
     // Display skill requests that match logged in user's skill offers
     
@@ -287,7 +287,7 @@ $updateStatus = "";
                     Would like help with: <strong><?=$skillsRequestedMatchedRow['skillname']?></strong>
                     </p>
                         
-                    <!-- If user has pending offers, display them with a notificatoin and hide the Offer button -->
+                    <!-- If user has pending offers, display them with a notification and hide the Offer button -->
                         
                     <?php if ($skillsRequestedMatchedRow['timeOffered']) { ?>
                         
